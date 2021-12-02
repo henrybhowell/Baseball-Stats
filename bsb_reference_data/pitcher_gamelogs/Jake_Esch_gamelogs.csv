@@ -1,0 +1,4 @@
+date_game,team_ID,opp_ID,game_result,days_rest,IP,H,R,ER,BB,SO,HR,HBP,earned_run_avg,batters_faced,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,game_score,inherited_runners,inherited_score,SB,CS,pickoffs,AB,2B,3B,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def
+2016-08-31,MIA,NYM,"L,2-5",99,4.1,7,2,2,3,2,1,0,4.15,21,71,41,11,5,10,6,4,1,0,40,,,0,0,0,18,0,0,0,2,0,0,1.08,-0.049,-0.03%,-0.13
+2016-09-05,MIA,PHI,"L,2-6",4,5.0,3,3,3,2,6,1,1,4.82,20,76,48,8,10,6,5,2,0,0,53,,,1,1,0,17,0,1,0,1,0,1,1.07,-0.168,-0.05%,-0.70
+2016-09-13,MIA,ATL,"W,7-5",7,3.2,7,3,3,1,2,2,0,5.54,18,67,46,14,6,5,10,7,0,0,36,,,0,0,0,17,1,0,1,1,0,0,1.04,-0.230,-0.03%,-1.82

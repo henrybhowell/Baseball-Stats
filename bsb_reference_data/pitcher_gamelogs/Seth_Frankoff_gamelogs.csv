@@ -1,0 +1,5 @@
+date_game,team_ID,opp_ID,game_result,days_rest,IP,H,R,ER,BB,SO,HR,HBP,earned_run_avg,batters_faced,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,game_score,inherited_runners,inherited_score,SB,CS,pickoffs,AB,2B,3B,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def
+2021-05-15,ARI,WSN,"W,11-4",99,4.2,3,2,2,4,4,0,0,3.86,21,90,49,10,9,9,4,1,2,0,50,,,1,0,0,16,1,0,0,1,0,1,1.10,-0.002,0.00%,-0.25
+2021-05-21,ARI,COL,"L,1-7",5,4.0,7,5,5,1,2,2,0,7.27,20,68,45,11,3,8,9,4,0,0,29,,,0,0,0,17,1,0,0,0,0,0,.45,-0.270,-0.06%,-2.71
+2021-05-29,ARI,STL,"L,4-7",7,5.0,7,7,7,4,5,1,2,9.22,27,85,51,9,6,8,8,2,2,0,26,,,0,1,0,21,1,0,0,0,0,0,.80,-0.328,-0.02%,-4.47
+2021-06-03,ARI,MIL,"L,4-7",4,1.0,3,1,1,0,0,1,0,9.20,6,17,9,1,2,1,5,2,2,0,,0,0,0,0,0,6,0,0,0,0,0,0,.14,-0.027,0.00%,-0.48

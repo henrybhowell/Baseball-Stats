@@ -1,0 +1,6 @@
+date_game,team_ID,opp_ID,game_result,days_rest,IP,H,R,ER,BB,SO,HR,HBP,earned_run_avg,batters_faced,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,game_score,inherited_runners,inherited_score,SB,CS,pickoffs,AB,2B,3B,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def
+2019-09-03,SDP,ARI,"L,1-2",99,6.0,5,2,2,2,4,0,0,3.00,25,88,51,11,8,8,11,4,0,0,56,,,0,0,0,23,2,1,0,0,0,0,.80,0.032,0.00%,1.21
+2019-09-10,SDP,CHC,"W,9-8",6,5.0,5,5,5,4,5,2,0,5.73,24,101,59,19,12,6,9,4,1,0,38,,,0,0,0,19,1,0,0,0,1,0,.91,-0.217,0.00%,-2.49
+2019-09-16,SDP,MIL,"L,1-5",5,3.0,3,2,2,1,2,1,0,5.79,13,49,31,10,2,4,6,5,0,0,,0,0,0,0,0,12,1,0,0,0,0,0,.31,-0.071,0.00%,-0.40
+2019-09-24,SDP,LAD,"L,3-6",7,3.2,3,4,4,5,4,0,1,6.62,19,79,38,11,5,5,4,3,1,0,38,,,0,0,0,13,1,0,0,1,0,0,1.22,0.017,0.00%,0.24
+2019-09-29,SDP,ARI,"L,0-1",4,2.0,1,0,0,0,4,0,0,5.95,7,29,19,5,5,0,3,1,0,0,,0,0,0,0,0,7,1,0,0,0,0,0,.84,0.118,0.00%,1.07

@@ -1,0 +1,4 @@
+date_game,team_ID,opp_ID,game_result,days_rest,IP,H,R,ER,BB,SO,HR,HBP,earned_run_avg,batters_faced,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,game_score,inherited_runners,inherited_score,SB,CS,pickoffs,AB,2B,3B,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def
+2015-05-31,MIL,ARI,"W,7-6",99,3.2,9,5,5,1,2,1,0,12.27,21,79,51,13,4,10,8,4,0,0,24,,,1,0,0,18,1,1,0,0,1,0,.68,-0.321,-0.02%,-3.36
+2015-09-26,MIL,STL,"L,1-5",99,4.0,6,5,5,4,0,0,0,11.74,20,73,39,12,2,9,7,4,2,0,26,,,0,0,0,16,3,0,0,3,0,1,.59,-0.319,0.00%,-3.13
+2015-10-03,MIL,CHC,"L,0-1",6,6.0,7,1,1,2,3,0,0,7.24,26,95,59,14,8,10,11,7,0,0,55,,,0,0,0,23,1,1,0,1,0,0,1.16,0.175,0.00%,1.79

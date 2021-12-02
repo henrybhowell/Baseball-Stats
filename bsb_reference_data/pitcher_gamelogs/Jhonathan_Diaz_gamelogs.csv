@@ -1,0 +1,4 @@
+date_game,team_ID,opp_ID,game_result,days_rest,IP,H,R,ER,BB,SO,HR,HBP,earned_run_avg,batters_faced,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,game_score,inherited_runners,inherited_score,SB,CS,pickoffs,AB,2B,3B,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def
+2021-09-17,LAA,OAK,"L,4-5",99,1.2,2,2,2,4,2,0,1,10.80,12,50,26,5,8,2,3,1,0,0,41,,,0,0,0,6,0,0,0,0,1,0,1.75,-0.145,0.00%,-1.46
+2021-09-25,LAA,SEA,"W,14-1",7,7.0,3,1,1,1,4,0,0,3.12,25,98,64,19,4,9,11,4,2,0,,0,0,0,0,0,24,1,0,0,1,0,1,.27,-0.022,0.00%,2.72
+2021-10-02,LAA,SEA,"L,4-6",6,4.1,6,3,3,2,3,1,0,4.15,22,89,59,15,10,7,10,5,1,0,40,,,0,0,0,20,3,0,0,0,0,1,1.08,-0.190,0.00%,-1.20

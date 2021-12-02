@@ -1,0 +1,5 @@
+date_game,team_ID,opp_ID,game_result,days_rest,IP,H,R,ER,BB,SO,HR,HBP,earned_run_avg,batters_faced,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,game_score,inherited_runners,inherited_score,SB,CS,pickoffs,AB,2B,3B,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def
+2021-04-21,PIT,DET,"L,2-5",99,4.1,4,4,4,2,4,2,0,8.31,18,60,37,9,10,6,6,1,0,0,41,,,0,0,0,16,1,0,0,1,0,0,.96,-0.205,-0.11%,-1.41
+2021-05-14,PIT,SFG,"W,3-2",22,5.0,1,0,0,1,4,0,0,3.86,16,57,35,11,4,3,8,3,3,0,68,,,0,0,0,15,0,0,0,1,0,0,.85,0.280,0.10%,2.51
+2021-09-24,PIT,PHI,"L,6-8",99,3.2,5,3,3,2,2,2,1,4.85,19,72,44,13,5,2,12,6,1,0,,0,0,0,0,0,16,2,0,0,0,0,0,.94,-0.170,0.00%,-1.42
+2021-09-30,PIT,CHC,"L,0-9",5,2.0,7,7,7,2,1,2,0,8.40,15,50,27,7,2,6,6,4,0,0,13,,,3,0,0,13,2,0,0,0,0,0,.74,-0.397,0.00%,-6.00

@@ -1,0 +1,6 @@
+date_game,team_ID,opp_ID,game_result,days_rest,IP,H,R,ER,BB,SO,HR,HBP,earned_run_avg,batters_faced,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,game_score,inherited_runners,inherited_score,SB,CS,pickoffs,AB,2B,3B,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def
+2017-09-02,DET,CLE,"L,2-5",99,3.1,2,0,0,0,0,0,2,0.00,14,47,28,5,3,8,4,1,1,0,,0,0,0,0,0,12,0,0,0,0,0,0,.12,0.024,0.00%,1.19
+2017-09-05,DET,KCR,"W,13-2",2,2.1,1,0,0,2,0,0,0,0.00,10,37,19,3,0,2,6,3,1,0,,1,1,0,0,0,8,1,0,0,0,0,0,.97,0.055,0.00%,0.68
+2017-09-11,DET,CLE,"L,0-11",5,3.2,7,7,7,2,2,1,1,6.75,23,85,51,13,4,9,9,6,0,0,19,,,0,0,0,19,0,1,0,0,1,2,.63,-0.316,0.00%,-5.23
+2017-09-16,DET,CHW,"L,4-10",4,1.2,5,6,5,2,1,1,0,9.82,12,48,29,9,2,4,5,4,0,0,22,,,0,0,0,10,2,0,0,0,0,0,.64,-0.366,0.00%,-5.18
+2017-09-21,DET,MIN,"L,1-12",4,1.2,3,5,5,4,1,0,0,12.08,12,51,25,9,2,4,3,2,0,0,,0,0,0,0,0,7,1,0,0,0,1,0,.03,-0.010,0.00%,-2.39
