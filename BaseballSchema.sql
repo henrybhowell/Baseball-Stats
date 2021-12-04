@@ -10,9 +10,19 @@ CREATE TABLE Players (
 	last_name				VARCHAR(20),
     first_name              VARCHAR(20),
     position                VARCHAR(20),
-	hand					VARCHAR(1),
+	bats					VARCHAR(1),
+    throws                  VARCHAR(1),
     height                  INT,
+    weight                  INT,
+    cur_team                VARCHAR(20),
+    draft_team              VARCHAR(20),
+    draft_pick              INT,
+    draft_year              INT,
+    high_school             VARCHAR(20),
+    school                  VARCHAR(20),
+    debut                   DATE,
     birthdate               DATE,
+
 	PRIMARY KEY (player_id)
 );
 
