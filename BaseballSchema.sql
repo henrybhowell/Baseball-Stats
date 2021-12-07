@@ -9,20 +9,19 @@ CREATE TABLE Players (
 	player_id	 			INT NOT NULL AUTO_INCREMENT,
 	last_name				VARCHAR(20),
     first_name              VARCHAR(20),
-    position                VARCHAR(20),
-	bats					VARCHAR(1),
-    throws                  VARCHAR(1),
-    height                  INT,
+    position                VARCHAR(50),
+	bats					VARCHAR(10),
+    throws                  VARCHAR(10),
+    height                  VARCHAR(5),
     weight                  INT,
-    cur_team                VARCHAR(20),
-    draft_team              VARCHAR(20),
+    cur_team                VARCHAR(30),
+    draft_team              VARCHAR(50),
     draft_pick              INT,
-    draft_year              INT,
-    high_school             VARCHAR(20),
-    school                  VARCHAR(20),
+    draft_year              YEAR, 
+    high_school             VARCHAR(50),
+    college                 VARCHAR(120),
     debut                   DATE,
     birthdate               DATE,
-
 	PRIMARY KEY (player_id)
 );
 
@@ -136,7 +135,7 @@ CREATE TABLE HitterSeasonStats (
     exit_velocity_avg       FLOAT,
     launch_angle_avg        FLOAT,
     sweet_spot_percent      FLOAT,
-    barrel_rate             FLOAT,
+    barrel_batted_rate      FLOAT,
     groundballs_percent     FLOAT,
     flyballs_percent        FLOAT,
     linedrives_percent      FLOAT,
@@ -191,6 +190,7 @@ CREATE TABLE PitcherPlaysIn (
     FOREIGN KEY (player_id) REFERENCES PLAYERS(player_id),
     FOREIGN KEY (game_id) REFERENCES GAME(game_id)
 );
+
 
 
 
