@@ -79,6 +79,7 @@ def insertHitterStats(cursor, player_name, player_id, season, G, PA, AB, H, Sing
     (player_id, season, G, PA, AB, H, 1B, 2B, 3B, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed) 
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
+
     try:
         cursor.execute(
     insert_str,

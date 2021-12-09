@@ -129,7 +129,7 @@ CREATE TABLE BatterSeasonStats (
     exit_velocity_avg       FLOAT,
     launch_angle_avg        FLOAT,
     sweet_spot_percent      FLOAT,
-    barrel_rate             FLOAT,
+    barrel_batted_rate      FLOAT,
     groundballs_percent     FLOAT,
     flyballs_percent        FLOAT,
     linedrives_percent      FLOAT,
@@ -221,6 +221,7 @@ CREATE TABLE PitcherPlaysIn (
     FOREIGN KEY (player_id) REFERENCES PLAYERS(player_id),
     FOREIGN KEY (game_id) REFERENCES GAME(game_id)
 );
+
 
 
 
