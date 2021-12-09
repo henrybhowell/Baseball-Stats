@@ -1,9 +1,8 @@
-USE Baseball2;
 DROP PROCEDURE IF EXISTS teamTable;
 DELIMITER //
 CREATE PROCEDURE teamTable(team VARCHAR(3), opponent VARCHAR(3), home BIT, away BIT, start_date DATE, finish_date DATE)
 BEGIN
-	IF opponent = "All" THEN
+	IF opponent = 'All' THEN 
 		IF home = 1 THEN
 			SET @wins = (SELECT COUNT(*) FROM Game WHERE (home_team = team) AND (home_score - away_score > 0));
 			SET @losses = (SELECT COUNT(*) FROM Game WHERE (home_team = team) AND (home_score - away_score < 0));
@@ -31,8 +30,8 @@ BEGIN
 			SET @RA = (SELECT SUM(home_score) FROM Game WHERE away_team = team) + (SELECT SUM(away_score) FROM Game WHERE away_team = team);
 			SELECT @GP AS Games_Played, @winpercentage AS Win_PCT, @RF AS RF, @RA AS RA;
 			SELECT * FROM Game;
-		END IF;
-	ELSE
+		END IF;	
+	ELSE 
 		IF home = 1 THEN
 			SET @wins = (SELECT COUNT(*) FROM Game WHERE (home_team = team) AND (away_team = opponent) AND (home_score - away_score > 0));
 			SET @losses = (SELECT COUNT(*) FROM Game WHERE (home_team = team) AND (away_team = opponent) AND (home_score - away_score <0));
@@ -42,7 +41,7 @@ BEGIN
 			SET @RA = (SELECT SUM(away_score) FROM Game WHERE home_team = team AND away_team = opponent);
 			SELECT @GP AS Games_Played, @winpercentage AS Win_PCT, @RF AS RF, @RA AS RA;
 			SELECT * FROM Game WHERE home_team = team and away_team = opponenet;
-		ELSE IF away = 1 THEN
+		ELSEIF away = 1 THEN
 			SET @wins = (SELECT COUNT(*) FROM Game WHERE (away_team = team) AND (home_team = opponent) AND (home_score - away_score < 0));
 			SET @losses = (SELECT COUNT(*) FROM Game WHERE (away_team = team) AND (home_team = opponent) AND (home_score - away_score >0));
 			SET @winpercentage = @wins/(@wins+@losses);
@@ -58,8 +57,10 @@ BEGIN
 			SET @GP = @wins+@losses;
 			SET @RF = (SELECT SUM(away_score) FROM Game WHERE away_team = team and home_team = opponent) + (SELECT SUM(home_score) FROM Game WHERE away_team = team AND home_team = opponent);
 			SET @RA = (SELECT SUM(home_score) FROM Game WHERE away_team = team AND home_team = oppenent) + (SELECT SUM(away_score) FROM Game WHERE away_team = team AND away_team = opponent);
+			SELECT @GP AS Games_Played, @winpercentage AS Win_PCT, @RF AS RF, @RA AS RA;
+			SELECT * FROM Game;
 		END IF;
 	END IF;
-END
+END;
 //
 DELIMITER ;
