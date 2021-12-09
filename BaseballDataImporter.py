@@ -10,11 +10,12 @@ import numpy as np
 teamMap = {"Arizona D'Backs": "ARI", "Atlanta Braves": "ATL", "Baltimore Orioles": "BAL", 
 "Boston Red Sox": "BOS", "Chicago White Sox": "CWS", "Chicago Cubs": "CHC","Cincinnati Reds": "CIN",
 "Cleveland Indians": "CLE", "Colorado Rockies": "COL", "Detroit Tigers": "DET", "Houston Astros": "HOU",
-"Kansas City Royals": "KC", "LA Angels of Anaheim": "ANA", "Los Angeles Dodgers":"LA", "Miami Marlins":"MIA", 
+"Kansas City Royals": "KC", "LA Angels of Anaheim": "LAA", "Los Angeles Dodgers":"LA", "Miami Marlins":"MIA", 
 "Milwaukee Brewers": "MIL", "Minnesota Twins": "MIN", "New York Mets": "NYM", "New York Yankees": "NYY", 
 "Oakland Athletics": "OAK", "Los Angeles Angels": "LAA", "Philadelphia Phillies": "PHI", "Pittsburgh Pirates": "PIT", "San Diego Padres": "SD", 
 "San Francisco Giants": "SF", "Seattle Mariners": "SEA", "St. Louis Cardinals": "STL", "Tampa Bay Rays": "TB", 
 "Texas Rangers": "TEX", "Toronto Blue Jays": "TOR", "Washington Nationals":"WAS"}
+
 pd.set_option('use_inf_as_na',True)
 
 def insertPlayers(cursor, last_name, first_name, position, bats, throws, height, weight, debut, birthdate):
