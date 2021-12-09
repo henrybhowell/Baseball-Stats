@@ -76,17 +76,6 @@ END
 //
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS pitcherSeasonStats;
-DELIMITER //
-CREATE PROCEDURE pitcherSeasonStats(start_year VARCHAR(4), end_year VARCHAR(4), firstname VARCHAR(20), lastname VARCHAR(20))
-BEGIN
-	DECLARE pid INT;
-	SET pid = (SELECT player_id FROM Players WHERE (first_name = firstname AND last_name = lastname));
-	SELECT * FROM PitcherSeasonStats WHERE player_id = pid AND season >= start_year AND season <= end_year;
-END
-//
-DELIMITER ;
-
 DROP PROCEDURE IF EXISTS batterSeasonStats;
 DELIMITER //
 CREATE PROCEDURE batterSeasonStats(start_year VARCHAR(4), end_year VARCHAR(4), firstname VARCHAR(20), lastname VARCHAR(20))
@@ -181,6 +170,17 @@ CREATE PROCEDURE pitcherLeaderboard(start_date DATE, end_date DATE)
 BEGIN
 	SELECT * FROM PitcherPlaysIn AS B, (SELECT * FROM Game WHERE Game.date_game >= start_date AND Game.date_game <= end_date) AS G, Players AS P 
 	WHERE B.game_id = G.game_id AND P.player_id = B.player_id;
+END
+//
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS getPlayerInfo;
+DELIMITER //
+CREATE PROCEDURE getPlayerInfo(firstname VARCHAR(20), lastname VARCHAR(20))
+BEGIN
+	DECLARE pid INT;
+	SET pid = (SELECT player_id FROM Players WHERE first_name = firstname AND last_name = lastname);
+	SELECT * FROM Players WHERE player_id = pid; 
 END
 //
 DELIMITER ;
