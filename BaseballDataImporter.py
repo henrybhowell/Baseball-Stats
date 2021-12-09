@@ -58,7 +58,7 @@ def insertPitcherStats(cursor, player_name, player_id, season, G, IP, PA, AB, H,
     
     insert_str = """INSERT INTO PitcherSeasonStats 
     (player_id, season, G, IP, PA, AB, H, 1B, 2B, 3B, HR, K, BB, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, 
-    xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, 
+    xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_rate, Pitches, four_seam_percent, 
     four_seam_avg_mph, four_seam_avg_spin, slider_percent, slider_avg_speed, slider_avg_spin, changeup_percent, changeup_avg_speed, changeup_avg_spin, 
     curveball_percent, curveball_avg_speed, curveball_avg_spin, sinker_percent, sinker_avg_speed, sinker_avg_spin, cutter_percent, cutter_avg_speed, cutter_avg_spin, 
     splitter_percent, splitter_avg_speed, splitter_avg_spin, knuckle_percent, knuckle_avg_speed, knuckle_avg_spin) 
@@ -78,7 +78,6 @@ def insertHitterStats(cursor, player_name, player_id, season, G, PA, AB, H, Sing
     insert_str = """INSERT INTO BatterSeasonStats  
     (player_id, season, G, PA, AB, H, 1B, 2B, 3B, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed) 
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-
 
     try:
         cursor.execute(
