@@ -20,43 +20,255 @@
 
   <body>
 
+    <html lang="en"><head>
+	<title>My First Webpage</title>
+	<meta charset="utf-8">
+
+	<!-- See https://www.w3schools.com/CSS/css_rwd_viewport.asp -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- You can also define the contents of the file inside a <style> tag -->
+
+</head>
+
+<body>
 
     <div class="banner">
       <div class="content">
         <h1>Major League Baseball Statistics</h1>
         <div class="info">This site allows the user to make specific calls to players in order to
         access their game logs, statistics, or player info. </div>
-
-        <div class="row justify-content-center">
-          <h2>Game statistics for any game in a given year.</h2>
-
-        </div>
-
-        <div class="row justify-content-center">
-          <div class="col-3 top">
-            <h3>Game Date:</h3>
-          </div>
-          <div class="col-5 top">
-          </div>
-        </div>
-
-        <div class="row justify-content-center">
-          <label for="tname" class="col-3 top"><h2> name:</h2></label>
-          <input type="text" id="tname" name="tname" class="col-5" placeholder="(required)" required>
-        </div>
-
-
-        <div class="row justify-content-center">
-          <div class="col-3 top">
-            <h3>End Date:</h3>
-          </div>
-          <div class="col-5 top">
-
-
-          </div>
-
-        </div>
+        <h2>Game statistics for any game in a given year.</h2>
       </div>
+    </div>
+
+
+    <div class="container">
+      <div class="row">
+        <form action="assets/php/team.php" method="POST">
+          <div class="d-flex justify-content-center">
+              <label for="tName" class="top"><h2> Team</h2>
+                <select name='sD' class="box">
+                  <option>-- Select Team --</option>
+                </select>
+              </label>
+          </div>
+
+          <div class="row">
+            <div class="col-2"></div>
+            <div class="col-2">
+              <label for="home"><h2>Home <input type="checkbox" class="home" name="home" value="Home"></h2></label>
+
+            </div>
+            <div class="col-2">
+              <label for="away"><h2>Away <input type="checkbox" class="away" name="away" value="Away"></h2></label>
+
+            </div>
+            <div class="col-2">
+              <label for="oName" class="elem"></label>
+                <span class="align-top"><select name='sD' class="box">
+                  <option>-- Select Opponent --</option>
+                </select></span>
+            </div>
+
+            <div class="col-2">
+              <label for="sYear" class="elem"></label>
+                <span class="align-top"><select name='sD' class="box">
+                  <option>-- Season Start Year--</option>
+                </select></span>
+            </div>
+
+            <div class="col-2">
+              <label for="eYear" class="elem"></label>
+                <span class="align-top"><select name='sD' class="box">
+                  <option>-- Season End Year--</option>
+                </select></span>
+            </div>
+
+            <div class="d-flex justify-content-center">
+              <input type="submit" class="col-3 top" value="Submit">
+            </div>
+          </div>
+        </form>
+
+
+
+      <div class="d-flex justify-content-center">
+          <label for="pName" class="top"><h2> Players</h2>
+          </label>
+      </div>
+      <form action="assets/php/player_stats.php" method="POST">
+        <div class="row">
+          <div class="col-3">
+            <h2>Individual Player Stats</h2>
+          </div>
+
+          <div class="col-2">
+            <label for="pName" class="elem"></label>
+              <select name='sD' class="box">
+                <option>-- Select Player --</option>
+              </select>
+          </div>
+
+          <div class="col-2">
+            <label for="sName" class="elem"></label>
+              <select name='sD' class="box">
+                <option>-- Select Season --</option>
+              </select>
+          </div>
+          <div class="col-2">
+            <label for="stat" class="elem"></label>
+              <select name='sD' class="box">
+                <option>-- Select Statistics --</option>
+              </select>
+          </div>
+          <div class="col-3"></div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <input type="submit" class="col-3 top" value="Submit">
+        </div>
+      </form>
+
+
+
+      <form action="assets/php/leaderboard.php" method="POST">
+        <div class="row">
+          <div class="col-3">
+            <h2>Player Leaderboard Stats</h2>
+          </div>
+
+          <div class="col-3">
+            <label for="sYear" class="elem"></label>
+              <select name='sD' class="box">
+                <option>--  Season Start Year --</option>
+              </select>
+          </div>
+
+          <div class="col-3">
+            <label for="eYear" class="elem"></label>
+              <select name='sD' class="box">
+                <option>-- Season End Year --</option>
+              </select>
+          </div>
+          <div class="col-3">
+            <label for="agg"><h2> Aggregate <input type="checkbox" class="aggregate" name="aggregate" value="Aggregate"></h2></label>
+          </div>
+          <div class="col-3"></div>
+        </div>
+
+
+        <div class="d-flex justify-content-center">
+          <input type="submit" class="col-3 top" value="Submit">
+        </div>
+
+      </form>
+
+      <div class="d-flex justify-content-center">
+          <label for="stats" class="top"><h2> Game Level Statistics</h2>
+          </label>
+      </div>
+
+      <form action="assets/php/batters.php" method="POST">
+
+        <div class="row">
+          <div class="col-3">
+            <h2>Batters</h2>
+          </div>
+
+          <div class="col-3">
+            <label for="sDate" class="elem"></label>
+              <select name='sD' class="box">
+                <option>--  Season Start Date --</option>
+              </select>
+          </div>
+
+          <div class="col-3">
+            <label for="eDate" class="elem"></label>
+              <select name='sD' class="box">
+                <option>-- Season End Date --</option>
+              </select>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+          <input type="submit" class="col-3 top" value="Submit">
+        </div>
+
+      </form>
+
+
+
+      <form action="assets/php/ptichers.php" method="POST">
+        <div class="row">
+          <div class="col-3">
+            <h2>Pitchers</h2>
+          </div>
+
+          <div class="col-3">
+            <label for="sDate" class="elem"></label>
+              <select name='sD' class="box">
+                <option>--  Season Start Date --</option>
+              </select>
+          </div>
+
+          <div class="col-3">
+            <label for="eDate" class="elem"></label>
+              <select name='sD' class="box">
+                <option>-- Season End Date --</option>
+              </select>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+          <input type="submit" class="col-3 top" value="Submit">
+        </div>
+      </form>
+
+      <form action="assets/php/match_ups.php" method="POST">
+        <div class="row">
+          <div class="col-3">
+            <h2>Match Ups</h2>
+          </div>
+
+          <div class="col-2">
+            <label for="pName" class="elem"></label>
+              <select name='sD' class="box">
+                <option>-- Select Player --</option>
+              </select>
+
+          </div>
+
+          <div class="col-2">
+            <label for="oName" class="elem"></label>
+              <span class="align-top"><select name='sD' class="box">
+                <option>-- Select Opponent --</option>
+              </select></span>
+          </div>
+
+          <div class="col-2">
+            <label for="sDate" class="elem"></label>
+              <select name='sD' class="box">
+                <option>--  Select Start Date --</option>
+              </select>
+          </div>
+
+          <div class="col-2">
+            <label for="eDate" class="elem"></label>
+              <select name='sD' class="box">
+                <option>-- Select End Date --</option>
+              </select>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+          <input type="submit" class="col-3 top" value="Submit">
+        </div>
+      </form>
+
+      <div class="footer">
+
+      </div>
+
     </div>
 
 

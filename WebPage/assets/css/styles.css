@@ -1,9 +1,9 @@
 html, body {
     font-family: 'Sen', sans-serif;
 }
-/*
-body{
-  /* background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url(../baseball.jpeg); */
+
+/* body{
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url(../baseball.jpeg);
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -24,9 +24,41 @@ body{
   background-color: #464646;
   width: auto;
   height: 300px;
-
 }
 
+.container{
+  /* padding-top: 400px; */
+}
+
+option{
+  align-items: start;
+}
+
+/* .box{
+  width: 200px;
+  align-items: start;
+} */
+
+input.home, input.away{
+  width: 20px;
+  height: 20px;
+}
+
+h2{
+  font-size: 15pt;
+}
+
+
+
+.d-flex {
+  margin-top: 25px;
+}
+
+.top h2{
+  margin-top: 50px;
+  font-size: 30pt;
+  text-align: center;
+}
 
 .content{
   width: 100%;
@@ -41,11 +73,11 @@ body{
   color: #fff;
 }
 
-.col-3{
+/* .col-3{
   border-style: solid;
   width: 300px;
   margin: 10px;
-}
+} */
 
 .content p{
   margin-top: 100px;
@@ -60,13 +92,19 @@ body{
   line-height: 25px;
 }
 
-
 label{
-    font-size: 20px;
+    font-size: 12px;
 }
 
 ul{
   list-style-position: inside;
   line-height: 30px;
+}
 
+.row{
+  padding-top: 30px;
+}
+
+.footer{
+  padding-bottom: 500px;
 }
