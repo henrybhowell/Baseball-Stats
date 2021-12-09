@@ -229,8 +229,8 @@ for i, row in gameResults.iterrows():
     home_teams.append(home_team)
     away_team = teamMap[row['away_team']]
     away_teams.append(away_team)
-    home_score = row['home_score']
-    away_score = row['away_score']
+    home_score = str(row['home_score'])
+    away_score = str(row['away_score'])
     game_date = row['date']
     insertGames(cursor, game_date, home_team, away_team, home_score, away_score)
     game_id = cursor.lastrowid
@@ -295,13 +295,15 @@ for year in hitterSeasonStats:
             team_score = game['game_result'].split("-")[0][-1]
             opp_score = game['game_result'].split("-")[1][0]
             date = game['date_game']
-            if (date, team_score, opp_score, team_score, opp_score) in gameDict:
-                game_id = gameDict[(date, team_score, opp_score, team_score, opp_score)]
-            elif (date, opp_score, team_score, opp_score, home_score) in gameDict:
-                game_id = gameDict[(date, opp_score, team_score, opp_score, home_score)]
+            home_tup = (date, team, opponent, team_score, opp_score)
+            away_tup = (date, opponent, team, opp_score, team_score)
+            if  home_tup in gameDict:
+                gameID = gameDict[home_tup]
+            elif away_tup in gameDict:
+                gameID = gameDict[away_tup]
             
 
-            insertHitterPlaysInGame(cursor, player_id, game_id, team, game['PA'],game['AB'],game['R'],
+            insertHitterPlaysInGame(cursor, player_id, gameID, team, game['PA'],game['AB'],game['R'],
                                 game['H'],game['2B'],game['3B'],game['HR'],game['RBI'],game['BB'],
                                 game['IBB'],game['SO'],game['HBP'],game['SH'],game['SF'],game['ROE'],
                                 game['GIDP'],game['SB'],game['CS'],game['batting_avg'],game['onbase_perc'],
@@ -355,10 +357,10 @@ for year in pitcherSeasonStats:
             team_score = game['game_result'].split("-")[0][-1]
             opp_score = game['game_result'].split("-")[1][0]
             date = game['date_game']
-            if (date, team_score, opp_score, team_score, opp_score) in gameDict:
-                game_id = gameDict[(date, team_score, opp_score, team_score, opp_score)]
-            elif (date, opp_score, team_score, opp_score, home_score) in gameDict:
-                game_id = gameDict[(date, opp_score, team_score, opp_score, home_score)]
+            if (date, team, opponent, team_score, opp_score) in gameDict:
+                game_id = gameDict[(date, team, opponent, team_score, opp_score)]
+            elif (date, opponent, team, opp_score, team_score) in gameDict:
+                game_id = gameDict[(date, opponent, team, opp_score, team_score)]
             if game['earned_run_avg'] == '---':
                 era = None
             else: 
