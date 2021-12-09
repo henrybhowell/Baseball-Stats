@@ -1,19 +1,31 @@
+
 import mysql.connector
 import os
 import csv
 import datetime
+import pandas as pd
+import glob
+import numpy as np
 
-# CSC 353 Homework 3
+teamMap = {"Arizona D'Backs": "ARI", "Atlanta Braves": "ATL", "Baltimore Orioles": "BAL", 
+"Boston Red Sox": "BOS", "Chicago White Sox": "CWS", "Chicago Cubs": "CHC","Cincinnati Reds": "CIN",
+"Cleveland Indians": "CLE", "Colorado Rockies": "COL", "Detroit Tigers": "DET", "Houston Astros": "HOU",
+"Kansas City Royals": "KC", "LA Angels of Anaheim": "ANA", "Los Angeles Dodgers":"LA", "Miami Marlins":"MIA", 
+"Milwaukee Brewers": "MIL", "Minnesota Twins": "MIN", "New York Mets": "NYM", "New York Yankees": "NYY", 
+"Oakland Athletics": "OAK", "Los Angeles Angels": "LAA", "Philadelphia Phillies": "PHI", "Pittsburgh Pirates": "PIT", "San Diego Padres": "SD", 
+"San Francisco Giants": "SF", "Seattle Mariners": "SEA", "St. Louis Cardinals": "STL", "Tampa Bay Rays": "TB", 
+"Texas Rangers": "TEX", "Toronto Blue Jays": "TOR", "Washington Nationals":"WAS"}
+pd.set_option('use_inf_as_na',True)
 
-def insertPlayers(cursor, last_name, first_name, position, bats, throws, height, weight, cur_team, draft_team, draft_pick, draft_year, high_school, college, debut, birthdate):
+def insertPlayers(cursor, last_name, first_name, position, bats, throws, height, weight, debut, birthdate):
     insert_str = """INSERT INTO Players 
-    (last_name, first_name, position, bats, throws, height, weight, cur_team, draft_team, draft_pick, draft_year, high_school, college, debut, birthdate)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    (last_name, first_name, position, bats, throws, height, weight, debut, birthdate)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
     try:
         cursor.execute(
     insert_str,
-    (last_name, first_name, position, bats, throws, height, weight, cur_team, draft_team, draft_pick, draft_year, high_school, college, debut, birthdate))
+    (last_name, first_name, position, bats, throws, height, weight, debut, birthdate))
     except mysql.connector.IntegrityError:
         pass
     except mysql.connector.Error as error_descriptor:
@@ -21,15 +33,15 @@ def insertPlayers(cursor, last_name, first_name, position, bats, throws, height,
         exit(1)
 
 
-def insertGames(cursor, game_id, date_game, home_team_ID, away_team_ID, home_score, away_score):
+def insertGames(cursor, date_game, home_team_ID, away_team_ID, home_score, away_score):
     insert_str = """INSERT INTO Game 
-    (game_id, date_game, home_team_ID, away_team_ID, home_score, away_score)
-    VALUES (%s, %s, %s, %s, %s, %s)"""
+    (date_game, home_team, away_team, home_score, away_score)
+    VALUES (%s, %s, %s, %s, %s)"""
 
     try:
         cursor.execute(
     insert_str,
-    (game_id, date_game, home_team_ID, away_team_ID, home_score, away_score))
+    (date_game, home_team_ID, away_team_ID, home_score, away_score))
     except mysql.connector.IntegrityError:
         pass
     except mysql.connector.Error as error_descriptor:
@@ -37,9 +49,19 @@ def insertGames(cursor, game_id, date_game, home_team_ID, away_team_ID, home_sco
         exit(1)
         
 
-def insertPitcherStats(cursor, player_id, season, G, IP, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, four_seam_avg_mph, four_seam_avg_spin, slider_percent, slider_avg_mph, slider_avg_spin, changeup_percent, changeup_avg_mph, changeup_avg_spin, curveball_percent, curveball_avg_mph, curveball_avg_spin, sinker_percent, sinker_avg_mph, sinker_avg_spin, cutter_percent, cutter_avg_mph, cutter_avg_spin, splitter_percent, splitter_avg_mph, splitter_avg_spin, knuckle_percent, knuckle_avg_mph, knuckle_avg_spin):
+def insertPitcherStats(cursor, player_name, player_id, season, G, IP, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent,BB_percent, 
+    BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, 
+    sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, four_seam_avg_mph, four_seam_avg_spin, slider_percent, 
+    slider_avg_mph, slider_avg_spin, changeup_percent, changeup_avg_mph, changeup_avg_spin, curveball_percent, curveball_avg_mph, 
+    curveball_avg_spin, sinker_percent, sinker_avg_mph, sinker_avg_spin, cutter_percent, cutter_avg_mph, cutter_avg_spin, splitter_percent, 
+    splitter_avg_mph, splitter_avg_spin, knuckle_percent, knuckle_avg_mph, knuckle_avg_spin):
+    
     insert_str = """INSERT INTO PitcherSeasonStats 
-    (player_id, season, G, IP, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, four_seam_avg_mph, four_seam_avg_spin, slider_percent, slider_avg_mph, slider_avg_spin, changeup_percent, changeup_avg_mph, changeup_avg_spin, curveball_percent, curveball_avg_mph, curveball_avg_spin, sinker_percent, sinker_avg_mph, sinker_avg_spin, cutter_percent, cutter_avg_mph, cutter_avg_spin, splitter_percent, splitter_avg_mph, splitter_avg_spin, knuckle_percent, knuckle_avg_mph, knuckle_avg_spin) 
+    (player_id, season, G, IP, PA, AB, H, 1B, 2B, 3B, HR, K, BB, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, 
+    xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, 
+    four_seam_avg_mph, four_seam_avg_spin, slider_percent, slider_avg_speed, slider_avg_spin, changeup_percent, changeup_avg_speed, changeup_avg_spin, 
+    curveball_percent, curveball_avg_speed, curveball_avg_spin, sinker_percent, sinker_avg_speed, sinker_avg_spin, cutter_percent, cutter_avg_speed, cutter_avg_spin, 
+    splitter_percent, splitter_avg_speed, splitter_avg_spin, knuckle_percent, knuckle_avg_speed, knuckle_avg_spin) 
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
     try:
@@ -48,12 +70,13 @@ def insertPitcherStats(cursor, player_id, season, G, IP, PA, AB, H, Single, Doub
     (player_id, season, G, IP, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, four_seam_avg_mph, four_seam_avg_spin, slider_percent, slider_avg_mph, slider_avg_spin, changeup_percent, changeup_avg_mph, changeup_avg_spin, curveball_percent, curveball_avg_mph, curveball_avg_spin, sinker_percent, sinker_avg_mph, sinker_avg_spin, cutter_percent, cutter_avg_mph, cutter_avg_spin, splitter_percent, splitter_avg_mph, splitter_avg_spin, knuckle_percent, knuckle_avg_mph, knuckle_avg_spin))
     except mysql.connector.Error as error_descriptor:
         print("Failed inserting tuple: {}".format(error_descriptor))
+        print(player_name)
         exit(1)
 
 
-def insertHitterStats(cursor, player_id, season, G, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed):
-    insert_str = """INSERT INTO HitterSeasonStats  
-    (player_id, season, G, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed) 
+def insertHitterStats(cursor, player_name, player_id, season, G, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed):
+    insert_str = """INSERT INTO BatterSeasonStats  
+    (player_id, season, G, PA, AB, H, 1B, 2B, 3B, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed) 
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
     try:
@@ -62,37 +85,40 @@ def insertHitterStats(cursor, player_id, season, G, PA, AB, H, Single, Double, T
     (player_id, season, G, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed))
     except mysql.connector.Error as error_descriptor:
         print("Failed inserting tuple: {}".format(error_descriptor))
+        print(player_name)
         exit(1)
 
 
-def insertPitcherPlaysInGame(cursor, player_id, game_id, decision, IP, H, R, ER, BB, HBP, K, BF, AB, pitches, strikes, ERA):
-    insert_str = """INSERT INTO PitcherPlaysInGame 
-    (player_id, game_id, decision, IP, H, R, ER, BB, HBP, K, BF, AB, pitches, strikes, ERA) 
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+def insertPitcherPlaysInGame(cursor, player_id, game_id, team, days_rest,IP,H,R,ER,BB,SO,HR,HBP,earned_run_avg,batters_faced,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,inherited_runners,inherited_score,SB,CS,pickoffs,AB,doubles,triples,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def):
+    insert_str = """INSERT INTO PitcherPlaysIn
+    (player_id, game_id, team, days_rest,IP,H,R,ER,BB,SO,HR,HBP,ERA,BF,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,inherited_runners,inherited_score,SB,CS,pickoffs,AB,2B,3B,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def) 
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     
     try:
         cursor.execute(
     insert_str,
-    (player_id, game_id, decision, IP, H, R, ER, BB, HBP, K, BF, AB, pitches, strikes, ERA))
+    (player_id, game_id, team, days_rest,IP,H,R,ER,BB,SO,HR,HBP,earned_run_avg,batters_faced,pitches,strikes_total,strikes_looking,strikes_swinging,inplay_gb_total,inplay_fb_total,inplay_ld,inplay_pu,inplay_unk,inherited_runners,inherited_score,SB,CS,pickoffs,AB,doubles,triples,IBB,GIDP,SF,ROE,leverage_index_avg,wpa_def,cwpa_def,re24_def))
     except mysql.connector.IntegrityError:
         pass
     except mysql.connector.Error as error_descriptor:
         print("Failed inserting tuple: {}".format(error_descriptor))
+        exit(1)
 
 
-def insertHitterPlaysInGame(cursor, player_id, game_id, PA, AB, H, Singe, Double, Triple, HR, K, BB, HBP, R, RBI, SB, AVG, OBP, SLG, OPS):
-    insert_str = """INSERT INTO HitterPlaysInGame 
-    (player_id, game_id, PA, AB, H, Singe, Double, Triple, HR, K, BB, HBP, R, RBI, SB, AVG, OBP, SLG, OPS) 
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+def insertHitterPlaysInGame(cursor, player_id, game_id, team, PA,AB,R,H,doubles,triples,HR,RBI,BB,IBB,SO,HBP,SH,SF,ROE,GIDP,SB,CS,batting_avg,onbase_perc,slugging_perc,onbase_plus_slugging,batting_order_position,leverage_index_avg,wpa_bat,cli_avg,cwpa_bat,re24_bat,pos_game):
+    insert_str = """INSERT INTO BatterPlaysIn 
+    (player_id,game_id,team,PA,AB,R,H,2B,3B,HR,RBI,BB,IBB,SO,HBP,SH,SF,ROE,GIDP,SB,CS,batting_avg,onbase_perc,slugging_perc,onbase_plus_slugging,batting_order_position,leverage_index_avg,wpa_bat,cli_avg,cwpa_bat,re24_bat,pos_game) 
+    VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     
     try:
         cursor.execute(
     insert_str,
-    (player_id, game_id, PA, AB, H, Singe, Double, Triple, HR, K, BB, HBP, R, RBI, SB, AVG, OBP, SLG, OPS))
+    (player_id,game_id,team,PA,AB,R,H,doubles,triples,HR,RBI,BB,IBB,SO,HBP,SH,SF,ROE,GIDP,SB,CS,batting_avg,onbase_perc,slugging_perc,onbase_plus_slugging,batting_order_position,leverage_index_avg,wpa_bat,cli_avg,cwpa_bat,re24_bat,pos_game))
     except mysql.connector.IntegrityError:
         pass
     except mysql.connector.Error as error_descriptor:
         print("Failed inserting tuple: {}".format(error_descriptor))
+        exit(1)
 
 
 # This converts the date obtained from the XML files into a SQL date string. 
@@ -105,6 +131,44 @@ def convertDate(date):
 
 # Read the 'Schema.sql' file into the 'schema_string' variable
 # See 'Schema.sql' for comments on what that file should contain
+pitcherSeasonStats = {}
+pitcherSeasonStatsFiles = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/savant_data/pitcher_stats/*")
+for file in pitcherSeasonStatsFiles:
+    year = file[-8:-4]
+    df = pd.read_csv(file)
+    pitcherSeasonStats[year] = df.replace({np.nan: 0, 'inf': 0, np.inf: 0, 'nan':0})
+
+hitterSeasonStatsFiles = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/savant_data/hitter_stats/*")
+hitterSeasonStats = {}
+for file in hitterSeasonStatsFiles:
+    year = file[-8:-4]
+    df = pd.read_csv(file)
+    hitterSeasonStats[year] = df.replace({np.nan: 0, 'inf': None, np.inf: 0, 'nan': 0})
+
+gameResults = pd.read_csv("/Users/dominicflocco/Desktop/CSC353_finalProject/data/game_results.csv")
+
+playerInfo = pd.read_csv("/Users/dominicflocco/Desktop/CSC353_finalProject/data/player_info.csv")
+playerInfo.replace({np.nan: None, 'inf': None, np.inf: None, 'nan': None}, inplace=True)
+
+hitterGameLogFiles = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/bsb_reference_data/batter_gamelogs/*")
+hitterGameLogs = {}
+for file in hitterGameLogFiles:
+    split = file.split("/")[-1].split("_")
+    first_name = split[0]
+    last_name = split[1]
+    df = pd.read_csv(file)
+    hitterGameLogs[(first_name, last_name)] = df.replace({np.nan: 0, 'inf': 0, np.inf: 0, 'nan':0})
+
+pitcherGameLogFiles = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/bsb_reference_data/pitcher_gamelogs/*")
+pitcherGameLogs = {}
+for file in pitcherGameLogFiles:
+    split = file.split("/")[-1].split("_")
+    first_name = split[0]
+    last_name = split[1]
+    df = pd.read_csv(file)
+    pitcherGameLogs[(first_name, last_name)] = df.replace({np.nan: 0, 'inf': 0, np.inf: 0, 'nan':0})
+
+
 with open("BaseballSchema.sql", "r") as in_file:
     schema_string = in_file.read()
 
@@ -118,219 +182,194 @@ connection = mysql.connector.connect(
 # and creating the three relations mentioned in the handout.
 cursor = connection.cursor()
 
-databaseName = "BaseballSchema"
+databaseName = "Baseball"
 
 try:
     results = cursor.execute(schema_string, multi=True)
-    for r in results:
-        pass
+    for cur in results:
+        if cur.with_rows:
+            cur.fetchall()
+    connection.commit()
 except mysql.connector.Error as error_descriptor:
     if error_descriptor.errno == mysql.connector.errorcode.ER_TABLE_EXISTS_ERROR:
         print("Table already exists: {}".format(error_descriptor))
+        exit(1)
     else:
         print("Failed creating schema: {}".format(error_descriptor))
+        exit(1)
 
 cursor.close()
 
-# create new cursor
+# Connect to MySQL
+connection = mysql.connector.connect(
+    user='root',
+    password='123456',
+    host='localhost')
+
+# Run the contents of 'Schema.sql', creating a schema (deleting previous incarnations),
+# and creating the three relations mentioned in the handout.
 cursor = connection.cursor()
 
 # After running the contents of 'Schema.sql', you have to do again
 # a USE SenatorVotes in your connection before adding the tuples.
 try:
     cursor.execute("USE {}".format(databaseName))
+
 except mysql.connector.Error as error_descriptor:
     print("Failed using database: {}".format(error_descriptor))
+    exit(1)
 
 
-tourney_id = 1
-match_id = 1
-file_count = 0
+gameIDs = []
+gameDict = {}
+home_teams = []
+away_teams = []
+for i, row in gameResults.iterrows():
+    home_team = teamMap[row['home_team']]
+    home_teams.append(home_team)
+    away_team = teamMap[row['away_team']]
+    away_teams.append(away_team)
+    home_score = row['home_score']
+    away_score = row['away_score']
+    game_date = row['date']
+    insertGames(cursor, game_date, home_team, away_team, home_score, away_score)
+    game_id = cursor.lastrowid
+    gameIDs.append(game_id)
+    gameDict[(game_date, home_team, away_team, home_score, away_score)] = game_id
+gameResults['id'] = gameIDs
+gameResults['home_team'] = home_teams
+gameResults['away_team'] = away_teams
 
 
-# run through csv files for pitcher season stats
-with open("/Users/izzymoody/Desktop/CSC353Final/data/player_info.csv") as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter = ',')
-    row_count = -1
-    for row in csv_reader:
-        row_count = row_count + 1 # maybe delete later
-        if row_count > 0:
-            first_name = row[1]
-            last_name = row[2]
-            position = row[4]
-            bats = row[5]
-            throws = row[6]
-            height = row[7]
-            if (height == ''):
-                height = None 
-            weight = row[8]
-            if (weight == ''):
-                weight = None
-            cur_team = row[9]
-            birthdate = row[10]
-            if (birthdate == ''):
-                birthdate = None
-            draft_team = row[11]
-            draft_pick = row[12]
-            if (draft_pick == ''):
-                draft_pick = None
-            draft_year = row[13]
-            if (draft_year == ''):
-                draft_year = None
-            high_school = row[14]
-            college = row[15]
-            debut = row[16]
-            if (debut == ''):
-                debut = None
+battersSeen = {}
+for year in hitterSeasonStats:
+    df = hitterSeasonStats[year]
+    
+    for i, r in df.iterrows():
+        first_name = r[' first_name'].strip()
+        last_name = r['last_name'].strip()
+        # Insert Player if not in DB
+        if (first_name,last_name) not in battersSeen:
+            
+            try:
+                playerData = playerInfo.loc[(playerInfo['first_name'] == first_name) & (playerInfo['last_name'] == last_name)]
+            except KeyError:
+                continue
 
-            insertPlayers(cursor, last_name, first_name, position, bats, throws, height, weight, cur_team, draft_team, draft_pick, draft_year, high_school, college, debut, birthdate)             
+            for i, row in playerData.iterrows():
+                position = row['position'].replace("\"", "")
+                insertPlayers(cursor, last_name, first_name, position, row['bats'], row['throws'], row['height'], 
+                    row['weight'], row['debut'], row['dob'])
+            player_id = cursor.lastrowid
+            battersSeen[(first_name, last_name)] = player_id
 
+        else:
+            
+            player_id = battersSeen[(first_name, last_name)]
+        # Insert Season Stats
+        # if not str(r['earned_run_avg']).isalnum():
+        #         era = None
+        # else: 
+        #     era = r['earned_run_avg']
+        insertHitterStats(cursor, last_name, player_id, year, r['b_game'], r['b_ab'], r['b_total_pa'], r['b_total_hits'], 
+                        r['b_single'], r['b_double'], r['b_triple'], r['b_home_run'], r['b_strikeout'], r['b_walk'], 
+                        r['b_k_percent'], r['b_bb_percent'],r['batting_avg'],r['slg_percent'],r['on_base_percent'],
+                        r['on_base_plus_slg'],r['b_rbi'],r['r_total_stolen_base'],r['b_hit_by_pitch'],r['r_run'],
+                        r['r_stolen_base_pct'],r['xba'],r['xslg'],r['woba'],r['xwoba'],r['xobp'],r['xiso'],r['exit_velocity_avg'],
+                        r['launch_angle_avg'],r['sweet_spot_percent'],r['barrel_batted_rate'],r['groundballs_percent'],
+                        r['flyballs_percent'],r['linedrives_percent'],r['popups_percent'],r['sprint_speed'])
+        playerGameLog = hitterGameLogs[(first_name, last_name)]
+        for i, game in playerGameLog.iterrows():
 
+            outcome = game['game_result'].split(",")[1]
+            if game['cwpa_bat']: 
+                cwpa = game['cwpa_bat'].replace("%", "")
+            else:
+                cwpa = None
+            # if not str(game['earned_run_avg']).isalnum():
+            #     era = None
+            # else: 
+            #     era = game['earned_run_avg']
+            team = game['team_ID']
+            opponent = game['opp_ID']
+            team_score = game['game_result'].split("-")[0][-1]
+            opp_score = game['game_result'].split("-")[1][0]
+            date = game['date_game']
+            if (date, team_score, opp_score, team_score, opp_score) in gameDict:
+                game_id = gameDict[(date, team_score, opp_score, team_score, opp_score)]
+            elif (date, opp_score, team_score, opp_score, home_score) in gameDict:
+                game_id = gameDict[(date, opp_score, team_score, opp_score, home_score)]
+            
 
-# run through csv files
-directory = os.path.join("c:\\","/Users/izzymoody/Desktop/CSC353Final/data/savant_data/hitter_stats/")
-for root,dirs,files in os.walk(directory):
-    for file in files:
-        row_count = -1
-        with open(file) as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter = ',')
-            file_count = file_count + 1
-            for row in csv_reader:
-                row_count = row_count + 1
-                if row_count > 0:
+            insertHitterPlaysInGame(cursor, player_id, game_id, team, game['PA'],game['AB'],game['R'],
+                                game['H'],game['2B'],game['3B'],game['HR'],game['RBI'],game['BB'],
+                                game['IBB'],game['SO'],game['HBP'],game['SH'],game['SF'],game['ROE'],
+                                game['GIDP'],game['SB'],game['CS'],game['batting_avg'],game['onbase_perc'],
+                                game['slugging_perc'],game['onbase_plus_slugging'],game['batting_order_position'],
+                                game['leverage_index_avg'],game['wpa_bat'],game['cli_avg'],cwpa,
+                                game['re24_bat'],game['pos_game'])
+pitchersSeen = {}
+for year in pitcherSeasonStats:
+    df = pitcherSeasonStats[year]
+    
+    for i, r in df.iterrows():
+        first_name = r[' first_name'].strip()
+        last_name = r['last_name'].strip()
+        # Insert Player if not in DB
+        if (first_name,last_name) not in pitchersSeen:
+            
+            try:
+                playerData = playerInfo.loc[(playerInfo['first_name'] == first_name) & (playerInfo['last_name'] == last_name)]
+            except KeyError:
+                continue
 
-                    # Player data
-                    last_name = row[0]
-                    first_name = row[1]
+            for i, row in playerData.iterrows():
+                position = row['position'].replace("\"", "")
+                insertPlayers(cursor, last_name, first_name, position, row['bats'], row['throws'], row['height'], 
+                    row['weight'], row['debut'], row['dob'])
+            player_id = cursor.lastrowid
+            pitchersSeen[(first_name, last_name)] = player_id
 
-                    #get the rest from scraped data
-                    # Hitter stats
-                    season = row[3]
-                    AB = row[5]
-                    PA = row[6]
-                    H = row[7]
-                    Single = row[8]
-                    Double = row[9]
-                    Triple = row[10]
-                    HR = row[11]
-                    K = row[12]
-                    BB = row[13]
-                    K_percent = row[14]
-                    BB_percent = row[15]
-                    Average = row[16]
-                    SLG = row[17]
-                    OBP = row[18]
-                    OPS = [19]
-                    RBI = [20]
-                    SB = row[21]
-                    G = row[22]
-                    HBP = row[23]
-                    R = row[24]
-                    SB_percent = row[27]
-                    xBA = row[28]
-                    xSLG = row[29]
-                    wOBA = row[30]
-                    xwOBA = row[31]
-                    xOBP = row[32]
-                    xISO = row[33]
-                    exit_velocity_avg = row[34]
-                    launch_angle_avg = row[35]
-                    sweet_spot_percent = row[36]
-                    barrel_rate = row[37]
-                    groundballs_percent = row[38]
-                    flyballs_percent = row[39]
-                    linedrives_percent = row[40]
-                    popups_percent = row[41]
-                    sprint_speed = row[42]
+        else:
+            
+            player_id = pitchersSeen[(first_name, last_name)]
+        # Insert Season Stats
 
-                    player_id = cursor.lastrowid
-                    insertHitterStats(cursor, player_id, season, G, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed)
-                
+        insertPitcherStats(cursor, last_name, player_id, year, r['p_game'], r['p_formatted_ip'], r['p_total_pa'], r['p_ab'], r['p_total_hits'], r['p_single'], r['p_double'], r['p_triple'],
+                        r['p_home_run'], r['p_strikeout'], r['p_walk'], r['p_k_percent'], r['p_bb_percent'], r['batting_avg'], r['slg_percent'], r['on_base_percent'],
+                        r['on_base_plus_slg'], r['p_earned_run'], r['p_run'], r['p_save'], r['p_blown_save'], r['p_win'], r['p_loss'], r['p_era'], r['p_opp_batting_avg'], 
+                        r['xslg'], r['woba'], r['xwoba'], r['xobp'], r['xiso'], r['exit_velocity_avg'], r['launch_angle_avg'], r['sweet_spot_percent'], r['barrel_batted_rate'], 
+                        r['n'], r['n_ff_formatted'], r['ff_avg_speed'], r['ff_avg_spin'], r['n_sl_formatted'], r['sl_avg_speed'], r['sl_avg_spin'], r['n_ch_formatted'], r['ch_avg_speed'],
+                        r['ch_avg_spin'], r['n_cukc_formatted'], r['cu_avg_speed'], r['cu_avg_spin'], r['n_sift_formatted'], r['si_avg_speed'], r['n_fc_formatted'], r['fc_avg_speed'],
+                        r['fs_avg_speed'], r['fs_avg_speed'], r['n_fs_formatted'], r['fs_avg_speed'], r['fs_avg_spin'], r['n_kn_formatted'], r['kn_avg_speed'], r['kn_avg_spin'])
+        playerGameLog = pitcherGameLogs[(first_name, last_name)]
+        for i, game in playerGameLog.iterrows():
 
-# run through csv files for pitcher season stats
-directory = os.path.join("c:\\","/Users/izzymoody/Desktop/CSC353Final/data/savant_data/pitcher_stats/")
-for root,dirs,files in os.walk(directory):
-    for file in files:
-        row_count = -1
-        with open(file) as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter = ',')
-            file_count = file_count + 1
-            for row in csv_reader:
-                row_count = row_count + 1
-                if row_count > 0:
+            outcome = game['game_result'].split(",")[1]
+            if game['cwpa_def']: 
+                cwpa = game['cwpa_def'].replace("%", "")
+            else:
+                cwpa = None
+            team = game['team_ID']
+            opponent = game['opp_ID']
+            team_score = game['game_result'].split("-")[0][-1]
+            opp_score = game['game_result'].split("-")[1][0]
+            date = game['date_game']
+            if (date, team_score, opp_score, team_score, opp_score) in gameDict:
+                game_id = gameDict[(date, team_score, opp_score, team_score, opp_score)]
+            elif (date, opp_score, team_score, opp_score, home_score) in gameDict:
+                game_id = gameDict[(date, opp_score, team_score, opp_score, home_score)]
+            if game['earned_run_avg'] == '---':
+                era = None
+            else: 
+                era = game['earned_run_avg']
+            insertPitcherPlaysInGame(cursor, player_id, game_id, team, game['days_rest'],game['IP'],game['H'],game['R'],game['ER'],game['BB'],game['SO'],game['HR'],game['HBP'],
+                                era,game['batters_faced'],game['pitches'],game['strikes_total'],game['strikes_looking'],game['strikes_swinging'],game['inplay_gb_total'],
+                                game['inplay_fb_total'],game['inplay_ld'],game['inplay_pu'],game['inplay_unk'],game['inherited_runners'],game['inherited_score'],game['SB'],game['CS'],
+                                game['pickoffs'],game['AB'],game['2B'],game['3B'],game['IBB'],game['GIDP'],game['SF'],game['ROE'],game['leverage_index_avg'],game['wpa_def'],cwpa,
+                                game['re24_def'])
 
-                    # Player data
-                    last_name = row[0]
-                    first_name = row[1]
-                    #get the rest from scraped data
-
-                    # Pitcher stats
-                    season = row[3]
-                    G = row[5]
-                    IP = row[6]
-                    PA = row[7]
-                    AB = row[8]
-                    H = row[9]
-                    Single = row[10]
-                    Double = row[11]
-                    Triple = row[12]
-                    HR = row[13]
-                    K = row[14]
-                    BB = row[15]
-                    K_percent = row[16]
-                    BB_percent = row[17]
-                    BAA = row[18]
-                    SLG = row[19]
-                    OBP = row[20]
-                    OPS = row[21]
-                    ER = row[22]
-                    R = row[23]
-                    SV = row[24]
-                    BS = row[25]
-                    W = row[26]
-                    L = row[27]
-                    ERA = row[28]
-                    xBA = row[30]
-                    xSLG = row[31]
-                    wOBA = row[32]
-                    xwOBA = row[33]
-                    xOBP = row[34]
-                    xISO = row[35]
-                    exit_velocity_avg = row[36]
-                    launch_angle_avg = row[37]
-                    sweet_spot_percent = row[38]
-                    barrel_batted_rate = row[39]
-                    Pitches = row[40]
-                    four_seam_percent = row[41]
-                    four_seam_avg_mph = row[42]
-                    four_seam_avg_spin = row[43]
-                    slider_percent = row[44]
-                    slider_avg_speed = row[45]
-                    slider_avg_spin = row[46]
-                    changeup_percent = row[47]
-                    changeup_avg_speed = row[48]
-                    changeup_avg_spin = row[49]
-                    curveball_percent = row[50]
-                    curveball_avg_speed = row[51]
-                    curveball_avg_spin = row[52]
-                    sinker_percent = row[53]
-                    sinker_avg_speed = row[54]
-                    sinker_avg_spin = row[55]
-                    cutter_percent = row[56]
-                    cutter_avg_speed = row[57]
-                    cutter_avg_spin = row[58]
-                    splitter_percent = row[59]
-                    splitter_avg_speed = row[60]
-                    splitter_avg_spin = row[61]
-                    knuckle_percent = row[62]
-                    knuckle_avg_speed = row[63]
-                    knuckle_avg_spin = row[64] 
-
-                    
-                    insertPitcherStats(cursor, player_id, season, G, IP, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, four_seam_avg_mph, four_seam_avg_spin, slider_percent, slider_avg_speed, slider_avg_spin, changeup_percent, changeup_avg_speed, changeup_avg_spin, curveball_percent, curveball_avg_speed, curveball_avg_spin, sinker_percent, sinker_avg_speed, sinker_avg_spin, cutter_percent, cutter_avg_speed, cutter_avg_spin, splitter_percent, splitter_avg_speed, splitter_avg_spin, knuckle_percent, knuckle_avg_speed, knuckle_avg_spin)    
-
-
-# commit and close connections
+        
 connection.commit()
 cursor.close()
 connection.close()

@@ -1,28 +1,21 @@
-DROP DATABASE IF EXISTS BaseballSchema;
+DROP DATABASE IF EXISTS Baseball;
 
-CREATE DATABASE BaseballSchema;
+CREATE DATABASE Baseball;
 
-USE BaseballSchema;
+USE Baseball;
 
 -- Savant data
 CREATE TABLE Players (
 	player_id	 			INT NOT NULL AUTO_INCREMENT,
 	last_name				VARCHAR(20),
     first_name              VARCHAR(20),
-    position                VARCHAR(20),
-	bats					VARCHAR(1),
-    throws                  VARCHAR(1),
-    height                  INT,
+    position                VARCHAR(50),
+	bats					VARCHAR(10),
+    throws                  VARCHAR(10),
+    height                  VARCHAR(5),
     weight                  INT,
-    cur_team                VARCHAR(20),
-    draft_team              VARCHAR(20),
-    draft_pick              INT,
-    draft_year              INT,
-    high_school             VARCHAR(20),
-    school                  VARCHAR(20),
     debut                   DATE,
     birthdate               DATE,
-
 	PRIMARY KEY (player_id)
 );
 
@@ -30,8 +23,8 @@ CREATE TABLE Players (
 CREATE TABLE Game (
     game_id                 INT NOT NULL AUTO_INCREMENT,
     date_game               DATE,
-	home_team_ID    	    VARCHAR(3),
-	away_team_ID  			VARCHAR(3),
+	home_team    	    VARCHAR(3),
+	away_team  			VARCHAR(3),
     home_score              INT,            
     away_score              INT,
 	PRIMARY KEY (game_id)
@@ -103,7 +96,7 @@ CREATE TABLE PitcherSeasonStats (
     FOREIGN KEY (player_id) REFERENCES PLAYERS(player_id)
 );
 
-CREATE TABLE HitterSeasonStats (
+CREATE TABLE BatterSeasonStats (
     player_id               INT,
     season                  YEAR,
     G                       INT,
@@ -142,30 +135,43 @@ CREATE TABLE HitterSeasonStats (
     linedrives_percent      FLOAT,
     popups_percent          FLOAT,
     sprint_speed            FLOAT,
-	PRIMARY KEY (player_id),
+	PRIMARY KEY (player_id, season),
     FOREIGN KEY (player_id) REFERENCES PLAYERS(player_id)
 );
 
-CREATE TABLE HitterPlaysIn (
+CREATE TABLE BatterPlaysIn (
     player_id               INT,
     game_id                 INT,
-    PA                      INT,
-    AB                      INT,
-    H                       INT,
-    1B	                    INT,
-    2B                      INT,
-    3B                      INT,
-    HR                      INT,
-    K                       INT,
-    BB                      INT,
-    HBP                     INT,
-    R                       INT,
-    RBI                     INT,
-    SB                      INT,
-    AVG                     FLOAT,
-    OBP                     FLOAT,
-    SLG                     FLOAT,
-    OPS                     FLOAT,
+    team                VARCHAR(3),
+    PA                 INT,
+    AB                 INT,
+    R                 INT,
+    H                 INT,
+    2B                 INT,
+    3B                 INT,
+    HR                 INT,
+    RBI                 INT,
+    BB                 INT,
+    IBB                 INT,
+    SO                 INT,
+    HBP                 INT,
+    SH                 INT,
+    SF                 INT,
+    ROE                 INT,
+    GIDP                 INT,
+    SB                 INT,
+    CS                 INT,
+    batting_avg                 FLOAT,
+    onbase_perc                 FLOAT,
+    slugging_perc                 FLOAT,
+    onbase_plus_slugging                 FLOAT,
+    batting_order_position                 INT,
+    leverage_index_avg                 FLOAT,
+    wpa_bat                 FLOAT,
+    cli_avg                 FLOAT,
+    cwpa_bat                 FLOAT,
+    re24_bat                 FLOAT,
+    pos_game                 VARCHAR(20),
 	PRIMARY KEY (player_id, game_id),
     FOREIGN KEY (player_id) REFERENCES PLAYERS(player_id),
     FOREIGN KEY (game_id) REFERENCES GAME(game_id)
@@ -174,19 +180,43 @@ CREATE TABLE HitterPlaysIn (
 CREATE TABLE PitcherPlaysIn (
     player_id               INT,
     game_id                 INT,
-    decision                VARCHAR(1),
+    team                    VARCHAR(3),
+    days_rest              INT,
     IP                      FLOAT,
     H                       INT,
     R                       INT,
     ER                      INT,
     BB                      INT,
+    SO                      INT,
+    HR                      INT,
     HBP                     INT,
-    K                       INT,
-    BF                      INT,
-    AB                      INT,
-    pitches                 INT,
-    strikes                 INT,
     ERA                     FLOAT,
+    BF                      INT,
+    pitches                 INT,
+    strikes_total           INT,
+    strikes_looking         INT,
+    strikes_swinging        INT,
+    inplay_gb_total         INT,
+    inplay_fb_total         INT,
+    inplay_ld         INT,
+    inplay_pu         INT,
+    inplay_unk         INT,
+    inherited_runners         INT,
+    inherited_score         INT,
+    SB         INT,
+    CS         INT,
+    pickoffs         INT,
+    AB         INT,
+    2B         INT,
+    3B         INT,
+    IBB         INT,
+    GIDP         INT,
+    SF         INT,
+    ROE         INT,
+    leverage_index_avg         FLOAT,
+    wpa_def         FLOAT,
+    cwpa_def         FLOAT,
+    re24_def         FLOAT,
 	PRIMARY KEY (player_id, game_id),
     FOREIGN KEY (player_id) REFERENCES PLAYERS(player_id),
     FOREIGN KEY (game_id) REFERENCES GAME(game_id)

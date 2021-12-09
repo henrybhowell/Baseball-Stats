@@ -9,7 +9,8 @@ import csv
 
 allIDs = {}
 batterIDs = {}
-with open("stathead_batter_data.csv", 'r') as f: 
+urlseen = set()
+with open("/Users/dominicflocco/Desktop/CSC353_finalProject/stathead_data/stathead_batter_data.csv", 'r') as f: 
     reader = csv.DictReader(f)
     for row in reader: 
         splitFirst = row['Player'].split()
@@ -26,11 +27,15 @@ with open("stathead_batter_data.csv", 'r') as f:
             splitLast = splitFirst[1].split("\\")
             lastname = splitLast[0]
             id = splitLast[1]
-        batterIDs[(firstname, lastname)] = id
-        allIDs[(firstname, lastname)] = id
+        
+        if id not in urlseen:
+            batterIDs[(firstname, lastname)] = id
+            allIDs[(firstname, lastname)] = id
+            urlseen.add(id)
+        
 pitcherIDs = {}
 
-with open("stathead_pitcher_data.csv", 'r') as f: 
+with open("/Users/dominicflocco/Desktop/CSC353_finalProject/stathead_data/stathead_pitcher_data.csv", 'r') as f: 
     reader = csv.DictReader(f)
     
     for row in reader: 
@@ -48,8 +53,11 @@ with open("stathead_pitcher_data.csv", 'r') as f:
             splitLast = splitFirst[1].split("\\")
             lastname = splitLast[0]
             id = splitLast[1]
-        pitcherIDs[(firstname, lastname)] = id
-        allIDs[(firstname, lastname)] = id
+
+        if id not in urlseen:
+            pitcherIDs[(firstname, lastname)] = id
+            allIDs[(firstname, lastname)] = id
+            urlseen.add(id)
 
 def convertAllNames(firstname, lastname): 
     # if lastname == "Gurriel": 
@@ -372,15 +380,16 @@ def main():
                     "school", "debut"]
 
     df = pd.DataFrame(columns=column_names)
-    for player in batters: 
+    for player in allIDs: 
         player_info = scrapePlayerInfo(player[0], player[1])
         df = df.append(player_info, ignore_index=True)
         print(len(df))
     #df.to_csv("batter_info.csv")
-    for player in pitchers: 
-        player_info = scrapePlayerInfo(player[0], player[1])
-        df = df.append(player_info, ignore_index=True)
-        print(len(df))
+    # for player in pitchers: 
+    #     player_info = scrapePlayerInfo(player[0], player[1])
+    #     df = df.append(player_info, ignore_index=True)
+    #     print(len(df))
     df.to_csv("player_info.csv")
+
 if __name__ == "__main__":
     main()

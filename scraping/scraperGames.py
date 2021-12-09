@@ -12,7 +12,7 @@ def scrapeScores():
   
     column_names = ["date", "home_team", "away_team", "home_score", "away_score"]
     df = pd.DataFrame(columns=column_names)
-    for i in range(2015, 2021):
+    for i in range(2015, 2022):
         url = 'https://www.baseball-reference.com/leagues/majors/' + str(i) + '-schedule.shtml'
         reqs = requests.get(url)
         data = BeautifulSoup(reqs.content, features='html.parser')
