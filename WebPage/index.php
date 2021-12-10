@@ -20,16 +20,30 @@
 
   <body>
 
-    <html lang="en"><head>
-	<title>My First Webpage</title>
-	<meta charset="utf-8">
+  <?php
+    $servername = "127.0.0.1"; // Do not use "localhost"
 
-	<!-- See https://www.w3schools.com/CSS/css_rwd_viewport.asp -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    // In the Real World (TM), you should not connect using the root account.
+    // Create a privileged account instead.
+    $username = "root";
 
-	<!-- You can also define the contents of the file inside a <style> tag -->
+    // In the Real World (TM), this password would be cracked in miliseconds.
+    $password = "123456";
 
-</head>
+    // Create connection
+    $conn = new mysqli($servername, $username, $password);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+
+    $dbname = "Baseball";
+
+    mysqli_select_db($conn, $dbname) or die("Could not open the '$dbname'");
+
+    ?>
 
 <body>
 
@@ -48,41 +62,81 @@
         <form action="assets/php/team.php" method="POST">
           <div class="d-flex justify-content-center">
               <label for="tName" class="top"><h2> Team</h2>
-                <select name='sD' class="box">
+                <select name="tName" class="box">
                   <option>-- Select Team --</option>
+                  <?php
+
+                  $stmt4 = $conn->prepare("SELECT DISTINCT home_team FROM Game ORDER BY home_team ASC;");
+
+                  $stmt4->execute();
+                  $result4 = $stmt4->get_result();
+                  $used = array("");
+
+                      while ($row = mysqli_fetch_array($result4)){
+                        foreach ($row as $value) {
+                          if (!in_array($value, $used)){
+                            echo "<option value='$value'>$value</option>";
+                            $used[] = $value;
+                          }
+                        }
+                      }
+                   ?>
                 </select>
               </label>
           </div>
 
           <div class="row">
             <div class="col-2"></div>
+
             <div class="col-2">
-              <label for="home"><h2>Home <input type="checkbox" class="home" name="home" value="Home"></h2></label>
+              <label for="location" class="elem">
+                <span class="align-top"><select name='location' class="box">
+                  <option>-- Home/Away --</option>
+                  <option> Home </option>
+                  <option> Away</option>
+
+                </select>
+                </span>
+                  </label>
+
 
             </div>
-            <div class="col-2">
-              <label for="away"><h2>Away <input type="checkbox" class="away" name="away" value="Away"></h2></label>
 
-            </div>
             <div class="col-2">
               <label for="oName" class="elem"></label>
-                <span class="align-top"><select name='sD' class="box">
+                <span class="align-top"><select name='oName' class="box">
+
                   <option>-- Select Opponent --</option>
+                  <?php
+
+                  $stmt4 = $conn->prepare("SELECT DISTINCT away_team FROM Game ORDER BY away_team ASC;");
+
+                  $stmt4->execute();
+                  $result4 = $stmt4->get_result();
+                  $used = array("");
+
+                      while ($row = mysqli_fetch_array($result4)){
+                        foreach ($row as $value) {
+                          if (!in_array($value, $used)){
+                            echo "<option value='$value'>$value</option>";
+                            $used[] = $value;
+                          }
+                        }
+                      }
+                   ?>
                 </select></span>
             </div>
 
             <div class="col-2">
-              <label for="sYear" class="elem"></label>
-                <span class="align-top"><select name='sD' class="box">
-                  <option>-- Season Start Year--</option>
-                </select></span>
+              <label for="sDate" class="elem">Start Date</label>
+                <span class="align-top">
+                <input type="date" id="start" name="sDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
             </div>
 
             <div class="col-2">
-              <label for="eYear" class="elem"></label>
-                <span class="align-top"><select name='sD' class="box">
-                  <option>-- Season End Year--</option>
-                </select></span>
+              <label for="eDate" class="elem">End Date</label>
+                <span class="align-top">
+                <input type="date" id="end" name="eDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
             </div>
 
             <div class="d-flex justify-content-center">
@@ -105,21 +159,94 @@
 
           <div class="col-2">
             <label for="pName" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='pName' class="box">
                 <option>-- Select Player --</option>
+                <?php
+
+                $stmt4 = $conn->prepare("SELECT DISTINCT CONCAT(first_name, ' ', last_name) as name FROM Players ORDER BY name ASC;");
+
+                $stmt4->execute();
+                $result4 = $stmt4->get_result();
+                $used = array("");
+
+                    while ($row = mysqli_fetch_array($result4)){
+                      foreach ($row as $value) {
+                        if (!in_array($value, $used)){
+                          echo "<option value='$value'>$value</option>";
+                          $used[] = $value;
+                        }
+                      }
+                    }
+                 ?>
               </select>
           </div>
 
           <div class="col-2">
-            <label for="sName" class="elem"></label>
-              <select name='sD' class="box">
-                <option>-- Select Season --</option>
+            <label for="sDate" class="elem"></label>
+              <select name='sDate' class="box">
+                <option>-- Start Season --</option>
+                <option>2015</option>
+                <option>2016</option>
+                <option>2017</option>
+                <option>2018</option>
+                <option>2019</option>
+                <option>2020</option>
+                <option>2021</option>
+              </select>
+          </div>
+          <div class="col-2">
+            <label for="eDate" class="elem"></label>
+              <select name='eDate' class="box">
+                <option>-- Start Season --</option>
+                <option>2015</option>
+                <option>2016</option>
+                <option>2017</option>
+                <option>2018</option>
+                <option>2019</option>
+                <option>2020</option>
+                <option>2021</option>
               </select>
           </div>
           <div class="col-2">
             <label for="stat" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='stat' class="box">
                 <option>-- Select Statistics --</option>
+                <option>G</option>
+                <option>AB</option>
+                <option>PA</option>
+                <option>H</option>
+                <option>1B</option>
+                <option>2B</option>
+                <option>3B</option>
+                <option>HR</option>
+                <option>K</option>
+                <option>BB</option>
+                <option>K_percent</option>
+                <option>BB_percent</option>
+                <option>Average</option>
+                <option>SLG</option>
+                <option>OBP</option>
+                <option>OPS</option>
+                <option>RBI</option>
+                <option>SB</option>
+                <option>HBP</option>
+                <option>R</option>
+                <option>SB_percent</option>
+                <option>xBA</option>
+                <option>xSLG</option>
+                <option>wOBA</option>
+                <option>xwOBA</option>
+                <option>xOBP</option>
+                <option>xISO</option>
+                <option>exit_velocity_avg</option>
+                <option>launch_angle_avg</option>
+                <option>sweet_spot_percent</option>
+                <option>barrel_rate</option>
+                <option>groundballs_percent</option>
+                <option>flyballs_percent</option>
+                <option>linedrives_percent</option>
+                <option>popups_percent</option>
+                <option>sprint_speed</option>
               </select>
           </div>
           <div class="col-3"></div>
@@ -139,14 +266,14 @@
 
           <div class="col-3">
             <label for="sYear" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='sYear' class="box">
                 <option>--  Season Start Year --</option>
               </select>
           </div>
 
           <div class="col-3">
             <label for="eYear" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='eYear' class="box">
                 <option>-- Season End Year --</option>
               </select>
           </div>
@@ -177,14 +304,14 @@
 
           <div class="col-3">
             <label for="sDate" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='sDate' class="box">
                 <option>--  Season Start Date --</option>
               </select>
           </div>
 
           <div class="col-3">
             <label for="eDate" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='eDate' class="box">
                 <option>-- Season End Date --</option>
               </select>
           </div>
@@ -206,14 +333,14 @@
 
           <div class="col-3">
             <label for="sDate" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='sDate' class="box">
                 <option>--  Season Start Date --</option>
               </select>
           </div>
 
           <div class="col-3">
             <label for="eDate" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='eDate' class="box">
                 <option>-- Season End Date --</option>
               </select>
           </div>
@@ -232,7 +359,7 @@
 
           <div class="col-2">
             <label for="pName" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='pName' class="box">
                 <option>-- Select Player --</option>
               </select>
 
@@ -240,21 +367,21 @@
 
           <div class="col-2">
             <label for="oName" class="elem"></label>
-              <span class="align-top"><select name='sD' class="box">
+              <span class="align-top"><select name='oName' class="box">
                 <option>-- Select Opponent --</option>
               </select></span>
           </div>
 
           <div class="col-2">
             <label for="sDate" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='sDate' class="box">
                 <option>--  Select Start Date --</option>
               </select>
           </div>
 
           <div class="col-2">
             <label for="eDate" class="elem"></label>
-              <select name='sD' class="box">
+              <select name='eDate' class="box">
                 <option>-- Select End Date --</option>
               </select>
           </div>
