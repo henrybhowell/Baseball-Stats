@@ -12,17 +12,20 @@ Data is scraped from baseball-reference.com and baseballsavant.mlb.com and refle
 statistics for pitchers and batters in Maljor League Baseball (MLB) from 2015 through the 2021 season. 
 
 Here is a brief description of how the repository is organized, and how it can be executed: 
-Folders:
 
-data -> contains BSB reference data, savant data, stathead data, game results, and player info
-Scraping -> includes 3 python data scrapers
+data -> contains BSB reference data, savant data, stathead data, game results, and player info scraped from web
+scraping -> includes 3 python data scrapers: 
+	scraperGames.py: scrapes game result data from baseball-reference.com
+	scraperPlayerData.py: scrapes player info data from baseball-reference.com
+	scraperGamelogs.py: scrapes game leve data for all players from baseball-reference.com
 WebPage -> folder which contains:
 	index.php -> homepage for main website
 	assets -> folder which holds css style sheet, an image and 7 php pages
-Files:
-BaseballDataImporter.py -> imports the data, takes about 20 minutes to run
-BaseballSchema.sql -> schema with 6 tables
-procedures.sql -> includes 8 sql procedures
+sql -> includes sql schema, functions and procedures
+	8 sql procedures, 2 sql functions and 6 table schema
+
+BaseballDataImporter.py -> imports scraped data into mySQL database (takes about 20 minutes to run)
+
 
 
 
