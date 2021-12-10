@@ -25,7 +25,9 @@
     $eDate = $_POST['eDate'];
     $oName = $_POST['oName'];
     $local = $_POST['location'];
-    $aggregate = $_POST['aggregate'];
+    $agg = $_POST['agg'];
+    $stat = $_POST['stat'];
+    // $aggregate = $_POST['aggregate'];
 
     if ($local = 'home'){
         $home = 1;
@@ -35,41 +37,110 @@
         $home = 0;
         $away = 1;
     }
-    $test_query1 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='BatterPlaysIn';";
-    $result1 = mysqli_query($conn, $test_query1);
-    $test_query3 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='Game'";
-    $result3 = mysqli_query($conn, $test_query3);
-    echo "<div class='col align-self-center tables'>";
-    echo "<h1> Batter Game Statistics for " . $pName . "</h1>";
-    echo "<br>";
-    echo "<div style='overflow-x:auto'>";
-    echo "<table border='1'>";
-    while ($row = mysqli_fetch_array($result1)) {
-            echo "<th>" . $row[0] . "</th>";
-        }
-    while ($row = mysqli_fetch_array($result3)) {
-            echo "<th>" . $row[0] . "</th>";
-        }
 
-    if($aggregate = 'Aggregate'){
 
-      $test_query = "CALL batterGameAggregate( '$firstname', '$lastname', $sDate', '$eDate');";
-      $result = mysqli_query($conn, $test_query);
-      $tuple_count = 0;
-      while ($row = mysqli_fetch_array($result)) {
-              echo "<tr>";
-              for ($i=0; $i < 38; $i++) {
-                  echo "<td>" . $row[$i] . "</td>";
-              }
-              echo "</tr>";
+
+    if ($agg == 'Yes'){
+      echo "<div class='col align-self-center tables'>";
+      echo "<h1> Aggregate Batter Stastics at the Game Level</h1>";
+      echo "<br>";
+      echo "<div style='overflow-x:auto'>";
+      echo "<table border='1'>";
+      echo  "<th>first_name</th>";
+      echo  "<th>last_name</th>";
+      echo  "<th>G</th>";
+      echo  "<th>PA</th>";
+      echo  "<th>AB</th>";
+      echo  "<th>R</th>";
+      echo  "<th>H</th>";
+      echo  "<th>2B</th>";
+      echo  "<th>3B</th>";
+      echo  "<th>HR</th>";
+      echo  "<th>RBI</th>";
+      echo  "<th>BB</th>";
+      echo  "<th>IBB</th>";
+      echo  "<th>K</th>";
+      echo  "<th>HBP</th>";
+      echo  "<th>SH</th>";
+      echo  "<th>SF</th>";
+      echo  "<th>ROE</th>";
+      echo  "<th>GIDP</th>";
+      echo  "<th>SB</th>";
+      echo  "<th>CS</th>";
+      echo  "<th>Average</th>";
+      echo "<th>OBP</th>";
+      echo  "<th>slugging_perc</th>";
+      echo  "<th>OPS</th>";
+      echo  "<th>avg_batting_order_position</th>";
+      echo  "<th>leverage_index_avg</th>";
+      echo  "<th>wpa_bat</th>";
+      echo  "<th>cli_avg</th>";
+      echo  "<th>cwpa_bat</th>";
+      echo  "<th>re24_bat</th>";
+
+
+        $test_query = "CALL batterGameAggregate('$sDate', '$eDate', '$stat');";
+        $result = mysqli_query($conn, $test_query);
+        $tuple_count = 0;
+        while ($row = mysqli_fetch_array($result)) {
+                echo "<tr>";
+                for ($i=0; $i < 31; $i++) {
+                    echo "<td>" . $row[$i] . "</td>";
+                }
+                echo "</tr>";
+        }
+            echo "</table>";
+            echo "</div>";
+            echo "</div>";
+        echo "</div>";
       }
-          echo "</table>";
-          echo "</div>";
-          echo "</div>";
-      echo "</div>";
-    }
 
     else{
+
+      echo "<div class='col align-self-center tables'>";
+      echo "<h1> Batter Game Statistics for " . $pName . "</h1>";
+      echo "<br>";
+      echo "<div style='overflow-x:auto'>";
+      echo "<table border='1'>";
+      echo  "<th>player_id</th>";
+      echo  "<th>game_id</th>";
+      echo  "<th>team</th>";
+      echo  "<th>PA</th>";
+      echo  "<th>AB</th>";
+      echo  "<th>R</th>";
+      echo  "<th>H</th>";
+      echo  "<th>2B</th>";
+      echo  "<th>3B</th>";
+      echo  "<th>HR</th>";
+      echo  "<th>RBI</th>";
+      echo  "<th>BB</th>";
+      echo  "<th>IBB</th>";
+      echo  "<th>SO</th>";
+      echo  "<th>HBP</th>";
+      echo  "<th>SH</th>";
+      echo  "<th>SF</th>";
+      echo  "<th>ROE</th>";
+      echo  "<th>GIDP</th>";
+      echo "<th>SB</th>";
+      echo "<th>CS</th>";
+      echo  "<th>batting_avg</th>";
+      echo  "<th>onbase_perc</th>";
+      echo  "<th>slugging_perc</th>";
+      echo  "<th>onbase_plus_slugging</th>";
+      echo  "<th>batting_order_position</th>";
+      echo  "<th>leverage_index_avg</th>";
+      echo  "<th>wpa_bat</th>";
+      echo  "<th>cli_avg</th>";
+      echo  "<th>cwpa_bat</th>";
+      echo  "<th>re24_bat</th>";
+      echo  "<th>pos_game</th>";
+      echo "<th>game_id</th>";
+      echo "<th>date_game</th>";
+      echo "<th>home_team</th>";
+      echo "<th>away_team</th>";
+      echo "<th>home_score</th>";
+      echo "<th>away_score</th>";
+
       $test_query = "CALL batterGameStats('$firstname', '$lastname', '$oName', '$sDate', '$eDate', $home, $away);";
       $result = mysqli_query($conn, $test_query);
       $tuple_count = 0;
@@ -84,6 +155,7 @@
           echo "</div>";
           echo "</div>";
       echo "</div>";
+
     }
 
     ?>

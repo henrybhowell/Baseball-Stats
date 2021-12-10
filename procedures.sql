@@ -180,23 +180,28 @@ BEGIN
 END;
 //
 DELIMITER ;
-CALL pitcherMatchUp('Rich', 'Hill', 'All', '2015-01-01', '2022-01-01', 1,0);
 
 DROP PROCEDURE IF EXISTS batterGameLeaderboard;
 DELIMITER //
 CREATE PROCEDURE batterGameLeaderboard(start_date DATE, end_date DATE)
 BEGIN
-	SELECT * FROM (Players NATURAL JOIN BatterPlaysIn AS P) NATURAL JOIN (SELECT * FROM Game WHERE Game.date_game >= start_date AND Game.date_game <= end_date) AS G;
+	SELECT * FROM (Players NATURAL JOIN BatterPlaysIn AS P) NATURAL JOIN (SELECT * FROM Game WHERE Game.date_game >= start_date AND Game.date_game <= end_date) AS G
+	ORDER BY HR DESC
+	LIMIT 0,100;
 END
 //
 DELIMITER ;
+
 
 DROP PROCEDURE IF EXISTS pitcherGameLeaderboard;
 DELIMITER //
 CREATE PROCEDURE pitcherGameLeaderboard(start_date DATE, end_date DATE)
 BEGIN
-	SELECT * FROM (Players NATURAL JOIN PitcherPlaysIn AS P) NATURAL JOIN (SELECT * FROM Game WHERE Game.date_game >= start_date AND Game.date_game <= end_date) AS G;
+	SELECT * FROM (Players NATURAL JOIN PitcherPlaysIn AS P) NATURAL JOIN (SELECT * FROM Game WHERE Game.date_game >= start_date AND Game.date_game <= end_date) AS G
+	ORDER BY SO DESC
+	LIMIT 0,100;
 END
+
 //
 DELIMITER ;
 
@@ -212,49 +217,7 @@ END
 //
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS PitcherSeasonAggregate;
-DELIMITER //
-CREATE PROCEDURE PitcherSeasonAggregate(start_year VARCHAR(4), finish_year VARCHAR(4))
-BEGIN
-    SELECT first_name, last_name, SUM(G) AS G, SUM(AB) AS AB, SUM(PA) AS PA,
-    SUM(H) AS H, SUM(1B) AS 1B, SUM(2B) AS 2B, SUM(3B) AS 3B, SUM(HR) AS HR,
-    SUM(K) AS K, SUM(BB) AS BB, SUM(K_percent*PA)/SUM(PA) as K_percent,
-    SUM(BB_percent*PA)/SUM(PA) as BB_percent, SUM(BAA*AB)/SUM(AB) as BAA,
-    SUM(SLG*AB)/SUM(AB) as SLG, SUM(OBP*PA)/SUM(PA) as OBP,
-    (SUM(OBP*PA)/SUM(PA) +  SUM(SLG*AB)/SUM(AB)) as OPS, SUM(ER) AS ER, SUM(R) AS R,
-    SUM(R) AS R, SUM(SV) AS SV, SUM(BS) AS BS, SUM(W) AS W, SUM(L) AS L, 
-    SUM(ER)/(9*SUM(IP)) AS ERA, SUM(xBA*AB)/SUM(AB) as xBA, SUM(xSLG*AB)/SUM(AB) as xSLG,
-    SUM(wOBA*PA)/SUM(PA) as wOBA, SUM(xwOBA*PA)/SUM(PA) as xwOBA, SUM(xOBP*PA)/SUM(PA) as xOBP, 
-    SUM(xISO*AB)/SUM(AB) as xISO,
-    SUM(four_seam_percent*Pitches)/SUM(Pitches) AS four_seam_percent,
-    SUM(four_seam_avg_mph*four_seam_percent*Pitches)/SUM(four_seam_percent*Pitches) AS four_seam_avg_mph,
-    SUM(four_seam_avg_spin*four_seam_percent*Pitches)/SUM(four_seam_percent*Pitches) AS four_seam_avg_spin,
-    SUM(slider_percent*Pitches)/SUM(Pitches) AS slider_percent,
-    SUM(slider_avg_speed*slider_percent*Pitches)/SUM(slider_percent*Pitches) AS slider_avg_speed,
-    SUM(slider_avg_spin*slider_percent*Pitches)/SUM(slider_percent*Pitches) AS slider_avg_spin,   
-    SUM(changeup_percent*Pitches)/SUM(Pitches) AS changeup_percent,
-    SUM(changeup_avg_speed*changeup_percent*Pitches)/SUM(changeup_percent*Pitches) AS changeup_avg_speed,
-    SUM(changeup_avg_spin*changeup_percent*Pitches)/SUM(changeup_percent*Pitches) AS changeup_avg_spin, 
-    SUM(curveball_percent*Pitches)/SUM(Pitches) AS curveball_avg_spin,
-    SUM(curveball_avg_speed*curveball_percent*Pitches)/SUM(curveball_percent*Pitches) AS curveball_avg_speed,
-    SUM(curveball_avg_spin*curveball_percent*Pitches)/SUM(curveball_percent*Pitches) AS curveball_avg_spin,
-    SUM(sinker_percent*Pitches)/SUM(Pitches) AS sinker_percent,
-    SUM(sinker_avg_speed*sinker_percent*Pitches)/SUM(sinker_percent*Pitches) AS sinker_avg_speed,
-    SUM(sinker_avg_spin*sinker_percent*Pitches)/SUM(sinker_percent*Pitches) AS sinker_avg_spin, 
-    SUM(cutter_percent*Pitches)/SUM(Pitches) AS cutter_percent,
-    SUM(cutter_avg_speed*cutter_percent*Pitches)/SUM(cutter_percent*Pitches) AS cutter_avg_speed,
-    SUM(cutter_avg_spin*cutter_percent*Pitches)/SUM(cutter_percent*Pitches) AS cutter_avg_spin, 
-    SUM(splitter_percent*Pitches)/SUM(Pitches) AS splitter_percent,
-    SUM(splitter_avg_speed*splitter_percent*Pitches)/SUM(splitter_percent*Pitches) AS splitter_avg_speed,
-    SUM(splitter_avg_spin*splitter_percent*Pitches)/SUM(splitter_percent*Pitches) AS splitter_avg_spin, 
-    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
-    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
-    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin
-    FROM PitcherSeasonStats NATURAL JOIN Players WHERE season>=start_year AND season<=finish_year
-    GROUP BY player_id;
-END
-//
-DELIMITER ;
+
 
 DROP PROCEDURE IF EXISTS BatterGameAggregate;
 DELIMITER //
@@ -1211,7 +1174,7 @@ DELIMITER ;
 
 DROP PROCEDURE IF EXISTS PitcherSeasonAggregate;
 DELIMITER //
-CREATE PROCEDURE PitcherSeasonAggregate(start_year YEAR, finish_year YEAR, stat VARCHAR(20))
+CREATE PROCEDURE PitcherSeasonAggregate(start_year VARCHAR(4), finish_year VARCHAR(4), stat VARCHAR(20))
 
 BEGIN
     IF (stat = 'G') THEN
@@ -1238,7 +1201,7 @@ BEGIN
 	    SUM(changeup_percent*Pitches)/SUM(Pitches) AS changeup_percent,
 	    SUM(changeup_avg_speed*changeup_percent*Pitches)/SUM(changeup_percent*Pitches) AS changeup_avg_speed,
 	    SUM(changeup_avg_spin*changeup_percent*Pitches)/SUM(changeup_percent*Pitches) AS changeup_avg_spin, 
-	    SUM(curveball_percent*Pitches)/SUM(Pitches) AS curveball_avg_spin,
+	    SUM(curveball_percent*Pitches)/SUM(Pitches) AS curveball_percent,
 	    SUM(curveball_avg_speed*curveball_percent*Pitches)/SUM(curveball_percent*Pitches) AS curveball_avg_speed,
 	    SUM(curveball_avg_spin*curveball_percent*Pitches)/SUM(curveball_percent*Pitches) AS curveball_avg_spin,
 	    SUM(sinker_percent*Pitches)/SUM(Pitches) AS sinker_percent,
@@ -1253,7 +1216,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY G LIMIT 0,100;
     
@@ -1297,7 +1260,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY IP DESC 
 	   	LIMIT 0,100;
@@ -1340,7 +1303,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY AB DESC LIMIT 0,100;
     
@@ -1384,7 +1347,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY PA DESC LIMIT 0,100;
     
@@ -1428,7 +1391,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY H DESC LIMIT 0,100;
     
@@ -1472,7 +1435,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY 1B DESC LIMIT 0,100;
     
@@ -1516,7 +1479,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY 2B DESC LIMIT 0,100;
     
@@ -1560,7 +1523,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY 3B DESC LIMIT 0,100;
     
@@ -1604,7 +1567,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY HR DESC LIMIT 0,100;
     
@@ -1648,7 +1611,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY K DESC LIMIT 0,100;
     
@@ -1692,7 +1655,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY BB DESC LIMIT 0,100;
     
@@ -1736,7 +1699,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY HBP DESC LIMIT 0,100;
     
@@ -1780,7 +1743,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY K_percent DESC LIMIT 0,100;
     
@@ -1824,7 +1787,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY BB_percent LIMIT 0,100;
     
@@ -1868,7 +1831,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY BAA LIMIT 0,100;
     
@@ -1912,7 +1875,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY SLG LIMIT 0,100;
     
@@ -1956,7 +1919,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY OBP LIMIT 0,100;
     
@@ -2000,7 +1963,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY OPS LIMIT 0,100;
     
@@ -2044,7 +2007,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY ER DESC LIMIT 0,100;
     
@@ -2088,7 +2051,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY R DESC LIMIT 0,100;
     
@@ -2132,7 +2095,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY SV DESC LIMIT 0,100;
     
@@ -2176,7 +2139,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY BS DESC LIMIT 0,100;
     
@@ -2220,7 +2183,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY W DESC LIMIT 0,100;
     
@@ -2264,7 +2227,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY L DESC LIMIT 0,100;
     
@@ -2308,7 +2271,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY ERA LIMIT 0,100;
     
@@ -2352,7 +2315,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY xBA LIMIT 0,100;
     
@@ -2396,7 +2359,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY xSLG LIMIT 0,100;
     
@@ -2440,7 +2403,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY wOBA LIMIT 0,100;
     
@@ -2484,7 +2447,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY xwOBA LIMIT 0,100;
     
@@ -2528,7 +2491,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY xOBP LIMIT 0,100;
     
@@ -2572,7 +2535,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY xISO LIMIT 0,100;
     
@@ -2616,7 +2579,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY four_seam_percent DESC LIMIT 0,100;
     
@@ -2660,7 +2623,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY four_seam_avg_speed DESC LIMIT 0,100;
     
@@ -2704,7 +2667,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY four_seam_avg_spin DESC LIMIT 0,100;
     
@@ -2748,7 +2711,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY slider_percent DESC LIMIT 0,100;
     
@@ -2792,7 +2755,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY slider_avg_speed DESC LIMIT 0,100;
     ELSEIF (stat = 'slider_avg_spin') THEN
@@ -2834,7 +2797,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY slider_avg_spin DESC LIMIT 0,100;
     
@@ -2878,7 +2841,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY changeup_percent DESC LIMIT 0,100;
     
@@ -2922,7 +2885,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY changeup_avg_speed DESC LIMIT 0,100;
     
@@ -2966,7 +2929,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY changeup_avg_spin DESC LIMIT 0,100;
     
@@ -3010,7 +2973,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY curveball_percent DESC LIMIT 0,100;
     
@@ -3054,7 +3017,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY curveball_avg_speed DESC LIMIT 0,100;
     
@@ -3098,7 +3061,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY curveball_avg_spin DESC LIMIT 0,100;
     
@@ -3142,7 +3105,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY sinker_percent DESC LIMIT 0,100;
 	    
@@ -3186,7 +3149,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY sinker_avg_speed DESC LIMIT 0,100;
     
@@ -3230,7 +3193,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
     ORDER BY sinker_avg_spin DESC LIMIT 0,100;
     
@@ -3274,7 +3237,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY cutter_percent DESC LIMIT 0,100;
     
@@ -3318,7 +3281,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY cutter_avg_speed DESC LIMIT 0,100;
     
@@ -3362,7 +3325,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY cutter_avg_spin DESC LIMIT 0,100;
     
@@ -3406,7 +3369,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY splitter_percent DESC LIMIT 0,100;
     
@@ -3450,7 +3413,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY splitter_avg_speed DESC LIMIT 0,100;
     
@@ -3494,7 +3457,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY splitter_avg_spin DESC LIMIT 0,100;
     
@@ -3538,7 +3501,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY knuckle_percent DESC LIMIT 0,100;
     
@@ -3582,7 +3545,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY knuckle_avg_speed DESC LIMIT 0,100;
     
@@ -3626,7 +3589,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY knuckle_avg_spin DESC LIMIT 0,100;
     
@@ -3670,7 +3633,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY exit_velocity_avg DESC LIMIT 0,100;
     
@@ -3714,7 +3677,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY launch_angle_avg DESC LIMIT 0,100;
     
@@ -3758,7 +3721,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
 	    ORDER BY sweet_spot_percent DESC LIMIT 0,100;
     
@@ -3802,7 +3765,7 @@ BEGIN
 	    SUM(knuckle_percent*Pitches)/SUM(Pitches) AS knuckle_percent,
 	    SUM(knuckle_avg_speed*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_speed,
 	    SUM(knuckle_avg_spin*knuckle_percent*Pitches)/SUM(knuckle_percent*Pitches) AS knuckle_avg_spin 
-	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_date
+	    FROM (PitcherSeasonStats NATURAL JOIN Players) WHERE season>=start_year AND season<=finish_year
 	    GROUP BY player_id
     	ORDER BY barrel_rate DESC LIMIT 0,100;
    
@@ -4656,5 +4619,4 @@ BEGIN
 END
 //
 DELIMITER ;
-CALL batterSeasonAggregate('2015', '2022', 'xISO');
 

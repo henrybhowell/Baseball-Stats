@@ -40,68 +40,49 @@
   $eDate = $_POST['eDate'];
   $stat = $_POST['stat'];
 
-
     echo "<div class='col align-self-center tables'>";
-    echo "<h1> Leaderboard for top 100 batters ordered by HR</h1>";
+    echo "<h1> Leaderboard for top 100 batters ordered by " . $stat ."</h1>";
 
     echo "<br>";
     echo "<div style='overflow-x:auto'>";
     echo "<table border='1'>";
+    echo "<th>first_name</th>";
+    echo "<th>last_name</th>";
+    echo "<th>G</th>";
+    echo "<th>AB</th>";
+    echo "<th>PA</th>";
+    echo "<th>H</th>";
+    echo "<th>1B</th>";
+    echo "<th>2B</th>";
+    echo "<th>3B</th>";
+    echo "<th>HR</th>";
+    echo "<th>K</th>";
+    echo "<th>BB</th>";
+    echo "<th>K_percent</th>";
+    echo "<th>BB_percent</th>";
+    echo "<th>Average</th>";
+    echo "<th>SLG";
+    echo "<th>OBP</th>";
+    echo "<th>OPS</th>";
+    echo "<th>RBI</th>";
+    echo "<th>SB</th>";
+    echo "<th>HBP</th>";
+    echo "<th>R</th>";
+    echo "<th>SB_percent</th>";
+    echo "<th>xBA";
+    echo "<th>xSLG</th>";
+    echo "<th>wOBA</th>";
+    echo "<th>xwOBA</th>";
+    echo "<th>xOBP</th>";
+    echo "<th>xISO</th>";
+    echo "<th>sprint_speed</th>";
 
-    echo  "<th>game_id</th>";
-    echo  "<th>player_id</th>";
-    echo  "<th>last_name</th>";
-    echo  "<th>first_name</th>";
-    echo "<th>position</th>";
-    echo  "<th>bats</th>";
-    echo  "<th>throws</th>";
-    echo  "<th>height</th>";
-    echo  "<th>weight</th>";
-    echo  "<th>debut</th>";
-    echo  "<th>birthdate</th>";
-    echo  "<th>team</th>";
-    echo  "<th>PA</th>";
-    echo  "<th>AB</th>";
-    echo  "<th>R</th>";
-    echo  "<th>H</th>";
-    echo  "<th>2B</th>";
-    echo  "<th>3B</th>";
-    echo  "<th>HR</th>";
-    echo  "<th>RBI</th>";
-    echo  "<th>BB</th>";
-    echo  "<th>IBB</th>";
-    echo  "<th>SO</th>";
-    echo  "<th>HBP</th>";
-    echo  "<th>SH	</th>";
-    echo  "<th>SF</th>";
-    echo  "<th>ROE</th>";
-    echo "<th>GIDP</th>";
-    echo  "<th>SB</th>";
-    echo  "<th>CS</th>";
-    echo  "<th>batting_avg</th>";
-    echo  "<th>onbase_perc</th>";
-    echo  "<th>slugging_perc</th>";
-    echo  "<th>onbase_plus_slugging</th>";
-    echo "<th>batting_order_position</th>";
-    echo  "<th>leverage_index_avg</th>";
-    echo  "<th>wpa_bat</th>";
-    echo  "<th>cli_avg</th>";
-    echo  "<th>cwpa_bat</th>";
-    echo  "<th>re24_bat</th>";
-    echo "<th>pos_game</th>";
-    echo  "<th>date_game</th>";
-    echo  "<th>home_team</th>";
-    echo  "<th>away_team</th>";
-    echo  "<th>home_score</th>";
-    echo  "<th>away_score</th>";
-
-
-    $test_query = "CALL batterGameLeaderboard('$sDate', '$eDate');";
+    $test_query = "CALL BatterSeasonAggregate('$sDate', '$eDate', '$stat');";
     $result = mysqli_query($conn, $test_query);
 
     while ($row = mysqli_fetch_array($result)) {
             echo "<tr>";
-            for ($i=0; $i < 46; $i++) {
+            for ($i=0; $i < 30; $i++) {
               echo "<td>" . $row[$i] . "</td>";
             }
 

@@ -58,13 +58,15 @@
   while ($row = mysqli_fetch_array($result1)) {
         echo "<th>" . $row[0] . "</th>";
       }
+      echo "<th> age year</th>";
+      echo "<th> age day</th>";
 
 
   $test_query = "CALL getPlayerInfo('$firstname', '$lastname');";
   $result = mysqli_query($conn, $test_query);
   while ($row = mysqli_fetch_array($result)) {
           echo "<tr>";
-          for ($i=0; $i < 10; $i++) {
+          for ($i=0; $i < 12; $i++) {
             echo "<td>" . $row[$i] . "</td>";
           }
 

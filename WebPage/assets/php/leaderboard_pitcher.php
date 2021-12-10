@@ -39,94 +39,87 @@
   $sDate = $_POST['sDate'];
   $eDate = $_POST['eDate'];
   $stat = $_POST['stat'];
-  $aggregate = $_POST['Aggregate'];
-
-  $test_query1 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='PitcherPlaysIn'";
-  $result1 = mysqli_query($conn, $test_query1);
-  $test_query3 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='Game'";
-  $result3 = mysqli_query($conn, $test_query3);
-  $test_query2 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='Players'";
-  $result2 = mysqli_query($conn, $test_query2);
 
 
+        echo "<div class='col align-self-center tables'>";
+        echo "<h1> Game Level Leaderboard for Pitching Statistics by SO</h1>";
 
+        echo "<br>";
+        echo "<div style='overflow-x:auto'>";
+        echo "<table border='1'>";
+        echo "<th>game_id</th>";
+        echo "<th>player_id</th>";
+        echo "<th>last_name</th>";
+        echo "<th>first_name</th>";
+        echo "<th>position</th>";
+        echo "<th>bats</th>";
+        echo "<th>throws</th>";
+        echo "<th>height</th>";
+        echo "<th>weight</th>";
+        echo "<th>debut</th>";
+        echo "<th>birthdate</th>";
+        echo "<th>team</th>";
+        echo "<th>days_rest</th>";
+        echo "<th>IP</th>";
+        echo "<th>H</th>";
+        echo "<th>R</th>";
+        echo "<th>ER</th>";
+        echo "<th>BB</th>";
+        echo "<th>SO</th>";
+        echo "<th>HR</th>";
+        echo "<th>HBP</th>";
+        echo "<th>ERA</th>";
+        echo "<th>BF</th>";
+        echo "<th>pitches</th>";
+        echo "<th>strikes_total</th>";
+        echo "<th>strikes_looking </th>";
+        echo "<th>strikes_swinging</th>";
+        echo "<th>inplay_gb_total</th>";
+        echo "<th>inplay_fb_total</th>";
+        echo "<th>inplay_ld</th>";
+        echo "<th>inplay_pu</th>";
+        echo "<th>inplay_unk</th>";
+        echo "<th>inherited_runners</th>";
+        echo "<th>inherited_score</th>";
+        echo "<th>SB</th>";
+        echo "<th>CS</th>";
+        echo "<th>pickoffs</th>";
+        echo "<th>AB</th>";
+        echo "<th>2B</th>";
+        echo "<th>3B</th>";
+        echo "<th>IBB</th>";
+        echo "<th>GIDP</th>";
+        echo "<th>SF</th>";
+        echo "<th>ROE</th>";
+        echo "<th>leverage_index_avg</th>";
+        echo "<th>wpa_def</th>";
+        echo "<th>cwpa_def</th>";
+        echo "<th>re24_def</th>";
+        echo "<th>date_game</th>";
+        echo "<th>home_team</th>";
+        echo "<th>away_team</th>";
+        echo "<th>home_score</th>";
+        echo "<th>away_score</th>";
 
-    echo "<div class='col align-self-center tables'>";
-    echo "<h1> Leaderboard for top 100 pithers ordered by " . $stat ."</h1>";
+        $test_query = "CALL pitcherGameLeaderboard('$sDate', '$eDate');";
+        $result = mysqli_query($conn, $test_query);
 
-    echo "<br>";
-    echo "<div style='overflow-x:auto'>";
-    echo "<table border='1'>";
-    while ($row = mysqli_fetch_array($result1)) {
-          echo "<th>" . $row[0] . "</th>";
+        while ($row = mysqli_fetch_array($result)) {
+                echo "<tr>";
+                for ($i=0; $i < 53; $i++) {
+                  echo "<td>" . $row[$i] . "</td>";
+                }
+
+                echo "</tr>";
+
         }
-    while ($row = mysqli_fetch_array($result3)) {
-          echo "<th>" . $row[0] . "</th>";
-        }
-
-    while ($row = mysqli_fetch_array($result2)) {
-          echo "<th>" . $row[0] . "</th>";
-        }
-
-  if ($aggregate = 'Aggregate'){
-
-    $test_query = "CALL PitcherSeasonAggregate('$sDate', '$eDate', '$stat');";
-    $result = mysqli_query($conn, $test_query);
-
-    while ($row = mysqli_fetch_array($result)) {
-            echo "<tr>";
-            for ($i=0; $i < 55; $i++) {
-              echo "<td>" . $row[$i] . "</td>";
-            }
-
-            echo "</tr>";
-
-    }
-        echo "</table>";
-        echo "</div>";
-      echo "</div>";
-    echo "</div>";
-  }
-
-  else{
-
-    echo "<div class='col align-self-center tables'>";
-    echo "<h1> Leaderboard for top 100 pithers ordered by " . $stat ."</h1>";
-
-    echo "<br>";
-    echo "<div style='overflow-x:auto'>";
-    echo "<table border='1'>";
-    while ($row = mysqli_fetch_array($result1)) {
-          echo "<th>" . $row[0] . "</th>";
-        }
-    while ($row = mysqli_fetch_array($result3)) {
-          echo "<th>" . $row[0] . "</th>";
-        }
-
-    while ($row = mysqli_fetch_array($result2)) {
-          echo "<th>" . $row[0] . "</th>";
-        }
-
-
-
-    $test_query = "CALL pitcherLeaderboard('$sDate', '$eDate', '$stat');";
-    $result = mysqli_query($conn, $test_query);
-
-    while ($row = mysqli_fetch_array($result)) {
-            echo "<tr>";
-            for ($i=0; $i < 55; $i++) {
-              echo "<td>" . $row[$i] . "</td>";
-            }
-
-            echo "</tr>";
-
-    }
         echo "</table>";
         echo "</div>";
       echo "</div>";
     echo "</div>";
 
-  }
+
+
 
 
 

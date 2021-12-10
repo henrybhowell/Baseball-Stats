@@ -25,7 +25,9 @@
     $eDate = $_POST['eDate'];
     $oName = $_POST['oName'];
     $local = $_POST['location'];
-    $aggregate = $_POST['aggregate'];
+    $agg = $_POST['agg'];
+    $stat = $_POST['stat'];
+    // $aggregate = $_POST['aggregate'];
 
     if ($local = 'home'){
         $home = 1;
@@ -36,49 +38,134 @@
         $away = 1;
     }
 
-    $test_query1 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='PitcherPlaysIn';";
-    $result1 = mysqli_query($conn, $test_query1);
-    $test_query3 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='Game'";
-    $result3 = mysqli_query($conn, $test_query3);
-    echo "<div class='col align-self-center tables'>";
-    echo "<h1> Pitcher Game Statistics for " . $pName . "</h1>";
-    echo "<br>";
-    echo "<div style='overflow-x:auto'>";
-    echo "<table border='1'>";
-    while ($row = mysqli_fetch_array($result1)) {
-            echo "<th>" . $row[0] . "</th>";
+    if ($agg == 'Yes'){
+
+
+      echo "<div class='col align-self-center tables'>";
+      echo "<h1> Aggregate Pitcher Statistics at the Game Level</h1>";
+      echo "<br>";
+      echo "<div style='overflow-x:auto'>";
+      echo "<table border='1'>";
+      echo  "<th>first_name</th>";
+      echo  "<th>last_name</th>";
+      echo  "<th>G</th>";
+      echo  "<th>IP</th>";
+      echo  "<th>H</th>";
+      echo  "<th>R</th>";
+      echo  "<th>ER</th>";
+      echo  "<th>BB</th>";
+      echo  "<th>K</th>";
+      echo  "<th>HR</th>";
+      echo  "<th>HBP</th>";
+      echo  "<th>BAA</th>";
+      echo  "<th>ERA</th>";
+      echo  "<th>BF</th>";
+      echo "<th>pitches</th>";
+      echo  "<th>strikes_total</th>";
+      echo  "<th>ROE</th>";
+      echo  "<th>GIDP</th>";
+      echo  "<th>SB</th>";
+      echo  "<th>CS</th>";
+      echo  "<th>strikes_looking</th>";
+      echo "<th>inplay_gb_total</th>";
+      echo  "<th>inplay_ld</th>";
+      echo  "<th>inplay_pu</th>";
+      echo  "<th>inplay_unk</th>";
+      echo  "<th>inherited_runners</th>";
+      echo  "<th>inherited_score</th>";
+      echo  "<th>SB</th>";
+      echo  "<th>CS</th>";
+      echo  "<th>pickoffs</th>";
+      echo  "<th>AB</th>";
+      echo  "<th>2B</th>";
+      echo  "<th>3B</th>";
+      echo  "<th>IBB</th>";
+      echo  "<th>GIDP</th>";
+      echo  "<th>SF</th>";
+      echo  "<th>ROE</th>";
+      echo  "<th>leverage_index_avg</th>";
+      echo  "<th>wpa_def</th>";
+      echo  "<th>cwpa_def</th>";
+      echo  "<th>re24_def</th>";
+
+
+
+        $test_query = "CALL PitcherGameAggregate('2015-10-10', '2021-01-01', 'G');";
+        $result = mysqli_query($conn, $test_query);
+        $tuple_count = 0;
+        while ($row = mysqli_fetch_array($result)) {
+                echo "<tr>";
+                for ($i=0; $i < 41; $i++) {
+                    echo "<td>" . $row[$i] . "</td>";
+                }
+                echo "</tr>";
         }
-    while ($row = mysqli_fetch_array($result3)) {
-            echo "<th>" . $row[0] . "</th>";
-        }
-
-
-    if ($aggregate = 'Aggregate'){
-
-
-      $test_query = "CALL pitcherGameAggregate('$firstname', '$lastname', '$sDate', '$eDate');";
-      $result = mysqli_query($conn, $test_query);
-      $tuple_count = 0;
-      while ($row = mysqli_fetch_array($result)) {
-              echo "<tr>";
-              for ($i=0; $i < 38; $i++) {
-                  echo "<td>" . $row[$i] . "</td>";
-              }
-              echo "</tr>";
+            echo "</table>";
+            echo "</div>";
+            echo "</div>";
+        echo "</div>";
       }
-          echo "</table>";
-          echo "</div>";
-          echo "</div>";
-      echo "</div>";
-    }
 
     else{
+
+      echo "<div class='col align-self-center tables'>";
+      echo "<h1> Pitcher Game Statistics for " . $pName . "</h1>";
+      echo "<br>";
+      echo "<div style='overflow-x:auto'>";
+      echo "<table border='1'>";
+      echo  "<th>player_id</th>";
+      echo  "<th>game_id</th>";
+      echo  "<th>team</th>";
+      echo  "<th>days_rest</th>";
+      echo  "<th>IP</th>";
+      echo  "<th>H</th>";
+      echo  "<th>R</th>";
+      echo  "<th>ER</th>";
+      echo  "<th>BB</th>";
+      echo  "<th>SO</th>";
+      echo  "<th>HR</th>";
+      echo  "<th>HBP</th>";
+      echo  "<th>ERA</th>";
+      echo  "<th>BF</th>";
+      echo "<th>pitches</th>";
+      echo  "<th>strikes_total</th>";
+      echo  "<th>strikes_looking</th>";
+      echo  "<th>strikes_swinging</th>";
+      echo "<th>inplay_gb_total</th>";
+      echo "<th>inplay_fb_total</th>";
+      echo  "<th>inplay_ld</th>";
+      echo  "<th>inplay_pu</th>";
+      echo  "<th>inplay_unk</th>";
+      echo  "<th>inherited_runners</th>";
+      echo  "<th>inherited_score</th>";
+      echo  "<th>SB</th>";
+      echo  "<th>CS</th>";
+      echo  "<th>pickoffs</th>";
+      echo  "<th>AB</th>";
+      echo  "<th>2B</th>";
+      echo  "<th>3B</th>";
+      echo  "<th>IBB</th>";
+      echo  "<th>GIDP</th>";
+      echo  "<th>SF</th>";
+      echo  "<th>ROE</th>";
+      echo  "<th>leverage_index_avg</th>";
+      echo  "<th>wpa_def</th>";
+      echo  "<th>cwpa_def</th>";
+      echo  "<th>re24_def</th>";
+      echo "<th>game_id</th>";
+      echo "<th>date_game</th>";
+      echo "<th>home_team</th>";
+      echo "<th>away_team</th>";
+      echo "<th>home_score</th>";
+      echo "<th>away_score</th>";
+
+
       $test_query = "CALL pitcherGameStats('$firstname', '$lastname', '$oName', '$sDate', '$eDate', $home, $away);";
       $result = mysqli_query($conn, $test_query);
       $tuple_count = 0;
       while ($row = mysqli_fetch_array($result)) {
               echo "<tr>";
-              for ($i=0; $i < 38; $i++) {
+              for ($i=0; $i < 45; $i++) {
                   echo "<td>" . $row[$i] . "</td>";
               }
               echo "</tr>";
@@ -87,7 +174,17 @@
           echo "</div>";
           echo "</div>";
       echo "</div>";
+
     }
+
+
+
+
+
+
+
+
+
     ?>
     </body>
     </html>
