@@ -33,31 +33,40 @@ with open("/Users/dominicflocco/Desktop/CSC353_finalProject/stathead_data/stathe
             allIDs[(firstname, lastname)] = id
             urlseen.add(id)
         
-pitcherIDs = {}
 
-with open("/Users/dominicflocco/Desktop/CSC353_finalProject/stathead_data/stathead_pitcher_data.csv", 'r') as f: 
+with open('/Users/dominicflocco/Desktop/CSC353_finalProject/data/player_info.csv', 'r') as f: 
     reader = csv.DictReader(f)
-    
     for row in reader: 
-        splitFirst = row['Player'].split()
-        firstname = splitFirst[0]
-        if len(splitFirst) == 3:
-            splitLast = splitFirst[2].split("\\")
-            lastname = splitFirst[1] + splitLast[0]
-            id = splitLast[1]
-        elif len(splitFirst) == 4:
-            splitLast = splitFirst[3].split("\\")
-            lastname = splitFirst[1] + splitFirst[2] + splitLast[0]
-            id = splitLast[1]
-        else:
-            splitLast = splitFirst[1].split("\\")
-            lastname = splitLast[0]
-            id = splitLast[1]
+        firstname = row['first_name']
+        lastname = row['last_name']
+        id = row['bsbref_id']
+        allIDs[(firstname, lastname)] = id
 
-        if id not in urlseen:
-            pitcherIDs[(firstname, lastname)] = id
-            allIDs[(firstname, lastname)] = id
-            urlseen.add(id)
+print(len(allIDs))
+
+# with open("/Users/dominicflocco/Desktop/CSC353_finalProject/stathead_data/stathead_pitcher_data.csv", 'r') as f: 
+#     reader = csv.DictReader(f)
+    
+#     for row in reader: 
+#         splitFirst = row['Player'].split()
+#         firstname = splitFirst[0]
+#         if len(splitFirst) == 3:
+#             splitLast = splitFirst[2].split("\\")
+#             lastname = splitFirst[1] + splitLast[0]
+#             id = splitLast[1]
+#         elif len(splitFirst) == 4:
+#             splitLast = splitFirst[3].split("\\")
+#             lastname = splitFirst[1] + splitFirst[2] + splitLast[0]
+#             id = splitLast[1]
+#         else:
+#             splitLast = splitFirst[1].split("\\")
+#             lastname = splitLast[0]
+#             id = splitLast[1]
+
+#         if id not in urlseen:
+#             pitcherIDs[(firstname, lastname)] = id
+#             allIDs[(firstname, lastname)] = id
+#             urlseen.add(id)
 
 def convertAllNames(firstname, lastname): 
     # if lastname == "Gurriel": 
@@ -151,6 +160,8 @@ def convertAllNames(firstname, lastname):
             lastname ="voit"
         if firstname == "Tommy":
             firstname = "th"
+        if lastname == "De Jesus Jr.":
+            return 'dejesiv02'
         if "Jr." in lastname: 
             lastname = lastname.split()[0]
         lastname = ''.join(filter(str.isalnum, lastname))
@@ -194,12 +205,6 @@ def scrapePlayerInfo(firstname, lastname):
                 weight = value.split(",")[1][:3]
                 playerData["height"] = height
                 playerData["weight"] = weight 
-            elif "School" in value and "High" not in value:
-                try: 
-                    split = info[1].split("(")
-                    playerData['school'] = split[0][:-1]
-                except: 
-                    playerData['school'] = ""
             elif "Born" in value:
                 try: 
                     date = info[1].split()
@@ -211,20 +216,7 @@ def scrapePlayerInfo(firstname, lastname):
                 except: 
                     dob = ""
                 playerData['dob'] = dob
-            elif "Draft" in value: 
-                words = info[1].split("the")
-                draftTeam = words[1].split("of")[0][:-1]
-                try:
-                    pickNo = words[2].split("(")[1].split(")")[0][:-2]
-                except IndexError:
-                    pickNo = ""
-                year = info[1].split("MLB")[0][-5:-1]
-                playerData['draft_team'] = draftTeam 
-                playerData['draft_pick'] = pickNo
-                playerData['draft_year'] = year
-            elif "High School" in value: 
-                split = info[1].split("(")
-                playerData['high_school'] = split[0][:-1]
+    
             elif "Debut" in value: 
                 try:
                     date = info[1].split()
@@ -243,80 +235,9 @@ def scrapePlayerInfo(firstname, lastname):
     return playerData
         
 
-    
-
-def scrapePitcher(firstname, lastname, year):
-    player = convertName(firstname, lastname, "pitcher")
-    #url = "https://www.baseball-reference.com/register/player.fcgi?id=martin003raf"
-
-    url = "https://www.baseball-reference.com/players/gl.fcgi?id=" + player + "&t=p&year=" + str(year)
-    #run through all the players in the year and hten move on to the next year
-    reqs = requests.get(url)
-    data = BeautifulSoup(reqs.content, features="html.parser")
-
-    pitcher_stat_index = ["date_game", "team_ID", "opp_ID", "game_result", "days_rest", "IP", "H", "R", "ER", "BB", "SO", "HR", "HBP", "earned_run_avg", "batters_faced",
-    "pitches", "strikes_total", "strikes_looking", "strikes_swinging", "inplay_gb_total", "inplay_fb_total", "inplay_ld", "inplay_pu", "inplay_unk", "game_score", "inherited_runners", 
-    "inherited_score",	"SB", "CS", "pickoffs", "AB", "2B", "3B", "IBB", "GIDP", "SF", "ROE", "leverage_index_avg", "wpa_def", "cwpa_def", "re24_def"]
-    
-    pitcher_stats = data.find('table',{'id': 'pitching_gamelogs'})
-    pitcher_stats_line = pitcher_stats.find("tbody")
-    pitcher_stats_rows = pitcher_stats_line.findAll('tr', {'id':re.compile(r'pitching_gamelogs.\d')})
-    
-    pitcher_stat_table = pd.DataFrame(columns=pitcher_stat_index)
-
-    for row in pitcher_stats_rows:
-        current_stat = {}
-        month_day = row.find('td', {'data-stat': "date_game"}).get_text(strip=True)
-        month = month_day[:3]
-        day = re.findall('[0-9]+', month_day)[0]
-        date = datetime.strptime(str(year) + month + day, "%Y%b%d")
-        date = str(date)[:10]
-        current_stat["date_game"] = date
-
-        for f in pitcher_stat_index[1:]:
-            
-            current_stat[f] = row.find('td', {'data-stat': f}).get_text(strip=True)
-            
-        pitcher_stat_table = pitcher_stat_table.append(current_stat, ignore_index=True)
-    
-    return pitcher_stat_table
-
-def scrapeHitter(firstname, lastname, year): 
-    player = convertName(firstname, lastname, "batter")
-    url = "https://www.baseball-reference.com/players/gl.fcgi?id=" + player + "&t=b&year=" + str(year)
-   
-    reqs = requests.get(url)
-    data = BeautifulSoup(reqs.content, features="html.parser")
-
-    hitter_stats = data.find('table',{'id': 'batting_gamelogs'})
-    hitter_stats_line = hitter_stats.find("tbody")
-    hitter_stats_rows = hitter_stats_line.findAll('tr', {'id':re.compile(r'batting_gamelogs.\d')})
-    
-
-    hitter_stat_index = ["date_game", "team_ID", "opp_ID", "game_result", "PA", "AB", "R", "H", "2B", "3B", "HR", "RBI", "BB", "IBB", "SO", "HBP", "SH", "SF", "ROE", "GIDP", "SB", "CS", 
-    "batting_avg", "onbase_perc", "slugging_perc", "onbase_plus_slugging", "batting_order_position", "leverage_index_avg", "wpa_bat", "cli_avg", "cwpa_bat", "re24_bat", "pos_game"]
-    
-    hitter_stat_table = pd.DataFrame(columns=hitter_stat_index)
-
-    for row in hitter_stats_rows:
-        current_stat = {}
-        month_day = row.find('td', {'data-stat': "date_game"}).get_text(strip=True)
-        month = month_day[:3]
-        day = re.findall('[0-9]+', month_day)[0]
-        date = datetime.strptime(str(year) + month + day, "%Y%b%d")
-        date = str(date)[:10]
-        current_stat["date_game"] = date
-
-        for f in hitter_stat_index[1:]:
-            current_stat[f] = row.find('td', {'data-stat': f}).get_text(strip=True)
-
-        hitter_stat_table = hitter_stat_table.append(current_stat, ignore_index=True)
-    
-    return hitter_stat_table
-
 def readHitterNames():
     hittersSeen = set()
-    files = glob.glob("savant_data/hitter_stats/*")
+    files = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/savant_data/hitter_stats_FULL/*")
     
     players = {}
     for file in files: 
@@ -355,41 +276,30 @@ def readPitcherNames():
     players[("Ryan", "O'Rourke")] = [2015, 2016, 2019]
     return players
 
-def resumeCheckpoint(players):
-    files = glob.glob("bsb_reference_data/pitcher_gamelogs/*") 
-    print(len(files))
-    for file in files: 
-        fileList = file.split("/")
-        fileList = fileList[-1].split("_")
-        firstname = fileList[0]
-        lastname = fileList[1]
-        tup = (firstname, lastname)
-        
-        if tup in players:
-            players.pop(tup)
-
-    return players
 
 def main():
     
     batters = readHitterNames()
-    pitchers = readPitcherNames()
+    #pitchers = readPitcherNames()
     
     column_names = ['first_name', 'last_name', 'bsbref_id', "position", "bats", "throws", "height", "weight",
-                    "cur_team", "dob", "draft_team", "draft_pick", "draft_year", "high_school", 
-                    "school", "debut"]
+                    "cur_team", "dob",  "debut"]
 
     df = pd.DataFrame(columns=column_names)
-    for player in allIDs: 
+    for player in batters: 
         player_info = scrapePlayerInfo(player[0], player[1])
+        seasons = ','.join(batters[player])
+        player_info['seasons'] = seasons
         df = df.append(player_info, ignore_index=True)
-        print(len(df))
+        if len(df)%100==0:
+            print(len(df))
+ 
     #df.to_csv("batter_info.csv")
     # for player in pitchers: 
     #     player_info = scrapePlayerInfo(player[0], player[1])
     #     df = df.append(player_info, ignore_index=True)
     #     print(len(df))
-    df.to_csv("player_info.csv")
+    df.to_csv("player_info_NEW.csv")
 
 if __name__ == "__main__":
     main()

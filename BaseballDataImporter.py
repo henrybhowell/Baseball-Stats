@@ -50,40 +50,40 @@ def insertGames(cursor, date_game, home_team_ID, away_team_ID, home_score, away_
         exit(1)
         
 
-def insertPitcherStats(cursor, player_name, player_id, season, G, IP, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent,BB_percent, 
+def insertPitcherStats(cursor, player_name, player_id, season, G, IP, PA, AB, H, Single, Double, Triple, HR, K, BB, HBP, K_percent,BB_percent, 
     BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, 
-    sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, four_seam_avg_mph, four_seam_avg_spin, slider_percent, 
+    sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, four_seam_avg_speed, four_seam_avg_spin, slider_percent, 
     slider_avg_mph, slider_avg_spin, changeup_percent, changeup_avg_mph, changeup_avg_spin, curveball_percent, curveball_avg_mph, 
     curveball_avg_spin, sinker_percent, sinker_avg_mph, sinker_avg_spin, cutter_percent, cutter_avg_mph, cutter_avg_spin, splitter_percent, 
     splitter_avg_mph, splitter_avg_spin, knuckle_percent, knuckle_avg_mph, knuckle_avg_spin):
     
     insert_str = """INSERT INTO PitcherSeasonStats 
-    (player_id, season, G, IP, PA, AB, H, 1B, 2B, 3B, HR, K, BB, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, 
+    (player_id, season, G, IP, PA, AB, H, 1B, 2B, 3B, HR, K, BB, HBP, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, 
     xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_rate, Pitches, four_seam_percent, 
-    four_seam_avg_mph, four_seam_avg_spin, slider_percent, slider_avg_speed, slider_avg_spin, changeup_percent, changeup_avg_speed, changeup_avg_spin, 
+    four_seam_avg_speed, four_seam_avg_spin, slider_percent, slider_avg_speed, slider_avg_spin, changeup_percent, changeup_avg_speed, changeup_avg_spin, 
     curveball_percent, curveball_avg_speed, curveball_avg_spin, sinker_percent, sinker_avg_speed, sinker_avg_spin, cutter_percent, cutter_avg_speed, cutter_avg_spin, 
     splitter_percent, splitter_avg_speed, splitter_avg_spin, knuckle_percent, knuckle_avg_speed, knuckle_avg_spin) 
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
     try:
         cursor.execute(
     insert_str,
-    (player_id, season, G, IP, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, four_seam_avg_mph, four_seam_avg_spin, slider_percent, slider_avg_mph, slider_avg_spin, changeup_percent, changeup_avg_mph, changeup_avg_spin, curveball_percent, curveball_avg_mph, curveball_avg_spin, sinker_percent, sinker_avg_mph, sinker_avg_spin, cutter_percent, cutter_avg_mph, cutter_avg_spin, splitter_percent, splitter_avg_mph, splitter_avg_spin, knuckle_percent, knuckle_avg_mph, knuckle_avg_spin))
+    (player_id, season, G, IP, PA, AB, H, Single, Double, Triple, HR, K, BB, HBP, K_percent, BB_percent, BAA, SLG, OBP, OPS, ER, R, SV, BS, W, L, ERA, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, Pitches, four_seam_percent, four_seam_avg_mph, four_seam_avg_spin, slider_percent, slider_avg_mph, slider_avg_spin, changeup_percent, changeup_avg_mph, changeup_avg_spin, curveball_percent, curveball_avg_mph, curveball_avg_spin, sinker_percent, sinker_avg_mph, sinker_avg_spin, cutter_percent, cutter_avg_mph, cutter_avg_spin, splitter_percent, splitter_avg_mph, splitter_avg_spin, knuckle_percent, knuckle_avg_mph, knuckle_avg_spin))
     except mysql.connector.Error as error_descriptor:
         print("Failed inserting tuple: {}".format(error_descriptor))
         print(player_name)
         exit(1)
 
 
-def insertHitterStats(cursor, player_name, player_id, season, G, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed):
+def insertHitterStats(cursor, player_name, player_id, season, G, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, CS, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, wOBACON, xwOBACON, BACON, xBACON, batted_balls, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, whiff_percent, sprint_speed):
     insert_str = """INSERT INTO BatterSeasonStats  
-    (player_id, season, G, PA, AB, H, 1B, 2B, 3B, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed) 
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    (player_id, season, G, PA, AB, H, 1B, 2B, 3B, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, CS, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, wOBACON, xwOBACON, BACON, xBACON, batted_balls, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, whiff_percent, sprint_speed) 
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
     try:
         cursor.execute(
     insert_str,
-    (player_id, season, G, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, sprint_speed))
+    (player_id, season, G, PA, AB, H, Single, Double, Triple, HR, K, BB, K_percent, BB_percent, Average, SLG, OBP, OPS, RBI, SB, CS, HBP, R, SB_percent, xBA, xSLG, wOBA, xwOBA, xOBP, xISO, wOBACON, xwOBACON, BACON, xBACON, batted_balls, exit_velocity_avg, launch_angle_avg, sweet_spot_percent, barrel_batted_rate, groundballs_percent, flyballs_percent, linedrives_percent, popups_percent, whiff_percent, sprint_speed))
     except mysql.connector.Error as error_descriptor:
         print("Failed inserting tuple: {}".format(error_descriptor))
         print(player_name)
@@ -139,7 +139,7 @@ for file in pitcherSeasonStatsFiles:
     df = pd.read_csv(file)
     pitcherSeasonStats[year] = df.replace({np.nan: 0, 'inf': 0, np.inf: 0, 'nan':0})
 
-hitterSeasonStatsFiles = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/savant_data/hitter_stats/*")
+hitterSeasonStatsFiles = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/savant_data/hitter_stats_NEW/*")
 hitterSeasonStats = {}
 for file in hitterSeasonStatsFiles:
     year = file[-8:-4]
@@ -148,10 +148,10 @@ for file in hitterSeasonStatsFiles:
 
 gameResults = pd.read_csv("/Users/dominicflocco/Desktop/CSC353_finalProject/data/game_results.csv")
 
-playerInfo = pd.read_csv("/Users/dominicflocco/Desktop/CSC353_finalProject/data/player_info.csv")
+playerInfo = pd.read_csv("/Users/dominicflocco/Desktop/CSC353_finalProject/data/player_info_NEW.csv")
 playerInfo.replace({np.nan: None, 'inf': None, np.inf: None, 'nan': None}, inplace=True)
 
-hitterGameLogFiles = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/bsb_reference_data/batter_gamelogs/*")
+hitterGameLogFiles = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/bsb_reference_data/batter_gamelogs_NEW/*")
 hitterGameLogs = {}
 for file in hitterGameLogFiles:
     split = file.split("/")[-1].split("_")
@@ -183,7 +183,7 @@ connection = mysql.connector.connect(
 # and creating the three relations mentioned in the handout.
 cursor = connection.cursor()
 
-databaseName = "Baseball"
+databaseName = "Baseball2"
 
 try:
     results = cursor.execute(schema_string, multi=True)
@@ -263,7 +263,9 @@ for year in hitterSeasonStats:
                     row['weight'], row['debut'], row['dob'])
             player_id = cursor.lastrowid
             battersSeen[(first_name, last_name)] = player_id
+            if first_name == "Shohei" and last_name == "Ohtani":
 
+                shohei = player_id
         else:
             
             player_id = battersSeen[(first_name, last_name)]
@@ -275,10 +277,11 @@ for year in hitterSeasonStats:
         insertHitterStats(cursor, last_name, player_id, year, r['b_game'], r['b_ab'], r['b_total_pa'], r['b_total_hits'], 
                         r['b_single'], r['b_double'], r['b_triple'], r['b_home_run'], r['b_strikeout'], r['b_walk'], 
                         r['b_k_percent'], r['b_bb_percent'],r['batting_avg'],r['slg_percent'],r['on_base_percent'],
-                        r['on_base_plus_slg'],r['b_rbi'],r['r_total_stolen_base'],r['b_hit_by_pitch'],r['r_run'],
-                        r['r_stolen_base_pct'],r['xba'],r['xslg'],r['woba'],r['xwoba'],r['xobp'],r['xiso'],r['exit_velocity_avg'],
-                        r['launch_angle_avg'],r['sweet_spot_percent'],r['barrel_batted_rate'],r['groundballs_percent'],
-                        r['flyballs_percent'],r['linedrives_percent'],r['popups_percent'],r['sprint_speed'])
+                        r['on_base_plus_slg'],r['b_rbi'],r['r_total_stolen_base'], r['r_total_caught_stealing'],['b_hit_by_pitch'],r['r_run'],
+                        r['r_stolen_base_pct'],r['xba'],r['xslg'],r['woba'],r['xwoba'],r['xobp'],r['xiso'],r['wobacon'],r['xwobacon'],r['bacon'],
+                        r['xbacon'],r['batted_ball'],r['exit_velocity_avg'],r['launch_angle_avg'],r['sweet_spot_percent'],r['barrel_batted_rate'],
+                        r['groundballs_percent'],r['flyballs_percent'],r['linedrives_percent'],r['popups_percent'],r['whiff_speed'],r['sprint_speed'])
+                        
         playerGameLog = hitterGameLogs[(first_name, last_name)]
         for i, game in playerGameLog.iterrows():
 
@@ -332,14 +335,15 @@ for year in pitcherSeasonStats:
                     row['weight'], row['debut'], row['dob'])
             player_id = cursor.lastrowid
             pitchersSeen[(first_name, last_name)] = player_id
-
+            if first_name == "Shohei" and last_name == "Ohtani":
+                player_id = shohei
         else:
             
             player_id = pitchersSeen[(first_name, last_name)]
         # Insert Season Stats
 
         insertPitcherStats(cursor, last_name, player_id, year, r['p_game'], r['p_formatted_ip'], r['p_total_pa'], r['p_ab'], r['p_total_hits'], r['p_single'], r['p_double'], r['p_triple'],
-                        r['p_home_run'], r['p_strikeout'], r['p_walk'], r['p_k_percent'], r['p_bb_percent'], r['batting_avg'], r['slg_percent'], r['on_base_percent'],
+                        r['p_home_run'], r['p_strikeout'], r['p_walk'], r['p_hit_by_pitch'],r['p_k_percent'], r['p_bb_percent'], r['batting_avg'], r['slg_percent'], r['on_base_percent'],
                         r['on_base_plus_slg'], r['p_earned_run'], r['p_run'], r['p_save'], r['p_blown_save'], r['p_win'], r['p_loss'], r['p_era'], r['p_opp_batting_avg'], 
                         r['xslg'], r['woba'], r['xwoba'], r['xobp'], r['xiso'], r['exit_velocity_avg'], r['launch_angle_avg'], r['sweet_spot_percent'], r['barrel_batted_rate'], 
                         r['n'], r['n_ff_formatted'], r['ff_avg_speed'], r['ff_avg_spin'], r['n_sl_formatted'], r['sl_avg_speed'], r['sl_avg_spin'], r['n_ch_formatted'], r['ch_avg_speed'],
