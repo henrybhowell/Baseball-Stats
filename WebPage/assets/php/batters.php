@@ -25,6 +25,8 @@
     $eDate = $_POST['eDate'];
     $oName = $_POST['oName'];
     $local = $_POST['location'];
+    $aggregate = $_POST['aggregate'];
+
     if ($local = 'home'){
         $home = 1;
         $away = 0;
@@ -48,20 +50,42 @@
     while ($row = mysqli_fetch_array($result3)) {
             echo "<th>" . $row[0] . "</th>";
         }
-    $test_query = "CALL batterMatchUp( '$firstname', '$lastname', '$oName', '$sDate', '$eDate', $home, $away);";
-    $result = mysqli_query($conn, $test_query);
-    $tuple_count = 0;
-    while ($row = mysqli_fetch_array($result)) {
-            echo "<tr>";
-            for ($i=0; $i < 38; $i++) {
-                echo "<td>" . $row[$i] . "</td>";
-            }
-            echo "</tr>";
+
+    if($aggregate = 'Aggregate'){
+
+      $test_query = "CALL batterGameAggregate( '$firstname', '$lastname', $sDate', '$eDate');";
+      $result = mysqli_query($conn, $test_query);
+      $tuple_count = 0;
+      while ($row = mysqli_fetch_array($result)) {
+              echo "<tr>";
+              for ($i=0; $i < 38; $i++) {
+                  echo "<td>" . $row[$i] . "</td>";
+              }
+              echo "</tr>";
+      }
+          echo "</table>";
+          echo "</div>";
+          echo "</div>";
+      echo "</div>";
     }
-        echo "</table>";
-        echo "</div>";
-        echo "</div>";
-    echo "</div>";
+
+    else{
+      $test_query = "CALL batterGameStats('$firstname', '$lastname', '$oName', '$sDate', '$eDate', $home, $away);";
+      $result = mysqli_query($conn, $test_query);
+      $tuple_count = 0;
+      while ($row = mysqli_fetch_array($result)) {
+              echo "<tr>";
+              for ($i=0; $i < 38; $i++) {
+                  echo "<td>" . $row[$i] . "</td>";
+              }
+              echo "</tr>";
+      }
+          echo "</table>";
+          echo "</div>";
+          echo "</div>";
+      echo "</div>";
+    }
+
     ?>
     </body>
     </html>

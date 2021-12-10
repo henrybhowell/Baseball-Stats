@@ -444,36 +444,36 @@
       <form action="assets/php/batters.php" method="POST">
 
         <div class="row">
-          <div class="col-3">
+          <div class="col">
             <h2>Batters</h2>
           </div>
 
-          <div class="col-2">
-        <label for="pName" class="elem"></label>
-          <span class="align-top"><select name='pName' class="box">
+          <div class="col">
+            <label for="pName" class="elem"></label>
+            <span class="align-top"><select name='pName' class="box">
 
-            <option>-- Select Batter --</option>
-            <?php
+              <option>-- Select Batter --</option>
+              <?php
 
-            $stmt4 = $conn->prepare("SELECT DISTINCT CONCAT(first_name, ' ', last_name) as name FROM Players WHERE `position` NOT LIKE 'pitcher' ORDER BY name ASC;");
+              $stmt4 = $conn->prepare("SELECT DISTINCT CONCAT(first_name, ' ', last_name) as name FROM Players WHERE `position` NOT LIKE 'pitcher' ORDER BY name ASC;");
 
-            $stmt4->execute();
-            $result4 = $stmt4->get_result();
-            $used = array("");
+              $stmt4->execute();
+              $result4 = $stmt4->get_result();
+              $used = array("");
 
-                while ($row = mysqli_fetch_array($result4)){
-                  foreach ($row as $value) {
-                    if (!in_array($value, $used)){
-                      echo "<option value='$value'>$value</option>";
-                      $used[] = $value;
+                  while ($row = mysqli_fetch_array($result4)){
+                    foreach ($row as $value) {
+                      if (!in_array($value, $used)){
+                        echo "<option value='$value'>$value</option>";
+                        $used[] = $value;
+                      }
                     }
                   }
-                }
-            ?>
-          </select></span>
-      </div>
+              ?>
+            </select></span>
+          </div>
 
-      <div class="col-2">
+          <div class="col">
               <label for="oName" class="elem"></label>
                 <span class="align-top"><select name='oName' class="box">
 
@@ -499,31 +499,33 @@
                 </select></span>
             </div>
 
-            <div class="row">
-            <div class="col-2"></div>
 
-            <div class="col-2">
+            <div class="col">
               <label for="location" class="elem">
                 <span class="align-top"><select name='location' class="box">
                   <option>-- Home/Away --</option>
-                  <option> Home </option>
-                  <option> Away</option>
+                  <option value = "Home"> Home </option>
+                  <option value = "Away"> Away</option>
 
                 </select>
-                </span>
-                  </label>
+              </span>
+              </label>
             </div>
 
-          <div class="col-3">
+          <div class="col">
             <label for="sDate" class="elem">Start Date</label>
               <span class="align-top">
               <input type="date" id="start" name="sDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
           </div>
 
-          <div class="col-3">
+          <div class="col">
             <label for="eDate" class="elem">End Date</label>
               <span class="align-top">
               <input type="date" id="end" name="eDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
+          </div>
+
+          <div class="col">
+            <label for="agg"><h2> Aggregate <input type="checkbox" class="aggregate" name="aggregate" value="Aggregate"></h2></label>
           </div>
 
 
@@ -538,11 +540,11 @@
 
       <form action="assets/php/pitchers.php" method="POST">
         <div class="row">
-          <div class="col-3">
+          <div class="col">
             <h2>Pitchers</h2>
           </div>
 
-          <div class="col-4">
+          <div class="col">
               <label for="pName" class="elem"></label>
                 <span class="align-top"><select name='pName' class="box">
 
@@ -593,10 +595,8 @@
                 </select></span>
             </div>
 
-            <div class="row">
-            <div class="col-2"></div>
 
-            <div class="col-2">
+            <div class="col">
               <label for="location" class="elem">
                 <span class="align-top"><select name='location' class="box">
                   <option>-- Home/Away --</option>
@@ -608,16 +608,20 @@
                   </label>
             </div>
 
-          <div class="col-4">
+          <div class="col">
             <label for="sDate" class="elem">Start Date</label>
               <span class="align-top">
               <input type="date" id="start" name="sDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
           </div>
 
-          <div class="col-4">
+          <div class="col">
             <label for="eDate" class="elem">End Date</label>
               <span class="align-top">
               <input type="date" id="end" name="eDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
+          </div>
+
+          <div class="col">
+            <label for="agg"><h2> Aggregate <input type="checkbox" class="aggregate" name="aggregate" value="Aggregate"></h2></label>
           </div>
 
           <div class="d-flex justify-content-center">

@@ -30,14 +30,14 @@ html, body {
   /* padding-top: 400px; */
 }
 
-option{
-  align-items: start;
-}
-
-/* .box{
-  width: 200px;
+/* option{
   align-items: start;
 } */
+
+.box{
+  font-size: 10pt;
+
+}
 
 
 table

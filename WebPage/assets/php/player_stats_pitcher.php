@@ -53,15 +53,19 @@
 
   echo "<br>";
   echo "<div style='overflow-x:auto'>";
-  echo "<table border='1'>";
+  echo "<table border='1' id=tb>";
+  $counter = 0;
   while ($row = mysqli_fetch_array($result1)) {
-        echo "<th>" . $row[0] . "</th>";
+        echo "<th onclick='sortTable($counter)'>" . $row[0] . "</th>";
+        $counter = $counter + 1;
       }
 
 
   $test_query = "CALL pitcherSeasonStats( '$sDate', $eDate, '$firstname', '$lastname');";
   $result = mysqli_query($conn, $test_query);
-  $tuple_count = 0;
+
+
+  echo "<tbody>";
 
   while ($row = mysqli_fetch_array($result)) {
           echo "<tr>";
@@ -72,11 +76,43 @@
           echo "</tr>";
 
   }
+      echo "</tbody>";
       echo "</table>";
       echo "</div>";
     echo "</div>";
   echo "</div>";
 
   ?>
+
+  <script>
+    function sortTable(n) {
+      //
+      // console.log(n);
+      //
+      // const table = document.getElementById('tb');
+      // const tableBody = table.querySelector('tbody');
+      // const rows = table.querySelectorAll('tr');
+      // const sortedRows = Array.from(rows);
+      // console.log(rows);
+      //
+      //
+      //
+      // sortedRows.sort( function (a,b) {
+      //   const x = a.querySelectorAll('td')[n].innerHTML;
+      //   const y = b.querySelectorAll('td')[n].innerHTML;
+      //
+      //   return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      //
+      //
+      // });
+      // [].forEach.call(rows, function (row) {
+      //   tableBody.removeChild(row);
+      // });
+      //
+      // sortedRows.forEach(function (sortedRow) {
+      //   tableBody.appendChild(sortedRow);
+      // });
+    }
+    </script>
 </body>
 </html>

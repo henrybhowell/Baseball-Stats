@@ -39,11 +39,11 @@
   $sDate = $_POST['sDate'];
   $eDate = $_POST['eDate'];
   $stat = $_POST['stat'];
-  // $aggregate = $_POST['aggregate'];
-  //
-  // if ($aggregate = 'aggregate'){
-  //   $aggregate = 1;
-  // }
+  $aggregate = $_POST['aggregate'];
+
+  if ($aggregate = 'aggregate'){
+    $aggregate = 1;
+  }
 
   $test_query1 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='BatterPlaysIn'";
   $result1 = mysqli_query($conn, $test_query1);
@@ -73,23 +73,45 @@
       }
 
 
+  if ($aggregate = 'Aggregate'){
+    $test_query = "CALL BatterSeasonAggregate('$sDate', '$eDate', '$stat');";
+    $result = mysqli_query($conn, $test_query);
 
-  $test_query = "CALL batterLeaderboard('$sDate', '$eDate', '$stat');";
-  $result = mysqli_query($conn, $test_query);
+    while ($row = mysqli_fetch_array($result)) {
+            echo "<tr>";
+            for ($i=0; $i < 48; $i++) {
+              echo "<td>" . $row[$i] . "</td>";
+            }
 
-  while ($row = mysqli_fetch_array($result)) {
-          echo "<tr>";
-          for ($i=0; $i < 48; $i++) {
-            echo "<td>" . $row[$i] . "</td>";
-          }
+            echo "</tr>";
 
-          echo "</tr>";
-
-  }
-      echo "</table>";
+    }
+        echo "</table>";
+        echo "</div>";
       echo "</div>";
     echo "</div>";
-  echo "</div>";
+
+  }
+
+  else{
+    $test_query = "CALL batterLeaderboard('$sDate', '$eDate', '$stat');";
+    $result = mysqli_query($conn, $test_query);
+
+    while ($row = mysqli_fetch_array($result)) {
+            echo "<tr>";
+            for ($i=0; $i < 48; $i++) {
+              echo "<td>" . $row[$i] . "</td>";
+            }
+
+            echo "</tr>";
+
+    }
+        echo "</table>";
+        echo "</div>";
+      echo "</div>";
+    echo "</div>";
+
+  }
 
   ?>
 </body>
