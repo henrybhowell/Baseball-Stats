@@ -26,6 +26,11 @@ sql -> includes sql schema, functions and procedures
 
 BaseballDataImporter.py -> imports scraped data into mySQL database (takes about 20 minutes to run)
 
-index.php -> through running a localhost via PHP within the WebPage folder through the command "php -S localhost:3333"
-	+ then navigate to the index.php file on the localhost
-	+ assets/php -> contains each PHP handler page that runs each procedure from procedures.sql
+
+Steps for compiling stack: 
+	Prep) scrape data using py files in scraping directory and save to csv in data directory
+	1) Run BaseballDataImporter.py to populate database 
+	2) Run procedure scripts in sql directory to create procedures and functions to query data
+	3) a localhost via PHP within the WebPage directory through the command "php -S localhost:3333"
+		+ then navigate to the index.php file on the localhost
+		+ assets/php -> contains each PHP handler page that runs each procedure from procedures.sql
