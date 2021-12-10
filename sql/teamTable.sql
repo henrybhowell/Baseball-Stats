@@ -1,5 +1,5 @@
 USE Baseball;
-
+--Gets matchup data between given team and an opponent between a specified date range
 DROP PROCEDURE IF EXISTS teamTable;
 DELIMITER //
 CREATE PROCEDURE teamTable(team VARCHAR(3), opponent VARCHAR(3), home BIT, away BIT, start_date DATE, finish_date DATE)

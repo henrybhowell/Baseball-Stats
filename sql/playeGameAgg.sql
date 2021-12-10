@@ -1,7 +1,7 @@
 DROP PROCEDURE IF EXISTS BatterGameAggregate;
 DELIMITER //
 CREATE PROCEDURE BatterGameAggregate(start_date DATE, end_date DATE, stat VARCHAR(20))
-
+-- Aggregates game level stats for all batters between certain date range, projects top 100 of given stat ordered by stat
 BEGIN
 	IF stat = 'G' THEN
 		SELECT first_name, last_name, COUNT(*) AS G, SUM(PA) AS PA, SUM(AB) AS AB, SUM(R) AS R,
@@ -413,7 +413,7 @@ BEGIN
 END
 //
 DELIMITER ;
-
+-- Aggregates game level stats for all pitchers between certain date range, projects top 100 of given stat ordered by stat
 DROP PROCEDURE IF EXISTS PitcherGameAggregate;
 DELIMITER //
 CREATE PROCEDURE PitcherGameAggregate(start_date DATE, end_date DATE, stat VARCHAR(20))

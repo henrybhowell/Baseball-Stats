@@ -6,147 +6,95 @@ import pandas as pd
 from datetime import datetime
 import glob
 import csv
+"""
+CSC 353 Final Project 
 
-allIDs = {}
-batterIDs = {}
-urlseen = set()
-with open("/Users/dominicflocco/Desktop/CSC353_finalProject/stathead_data/stathead_batter_data.csv", 'r') as f: 
-    reader = csv.DictReader(f)
-    for row in reader: 
-        splitFirst = row['Player'].split()
-        firstname = splitFirst[0]
-        if len(splitFirst) == 3:
-            splitLast = splitFirst[2].split("\\")
-            lastname = splitFirst[1] + " " + splitLast[0]
-            id = splitLast[1]
-        elif len(splitFirst) == 4:
-            splitLast = splitFirst[3].split("\\")
-            lastname = splitFirst[1] + " " + splitFirst[2] + " " + splitLast[0]
-            id = splitLast[1]
-        else:
-            splitLast = splitFirst[1].split("\\")
-            lastname = splitLast[0]
-            id = splitLast[1]
+Author: Dominic Flocco, Henry Howell, Gabe Levy, Izzy Moody 
+
+Web scraper that scrapes information from individual player pages 
+on baseball-reference.com and creates a csv with each player in 
+the database and their demographic and biological information
+
+"""
+def readIDs():
+    """
+    Reads CSV file generated from stathead.com and creates a dictionary that
+    maps a players first and last name to their baseball reference id. This id is
+    used to create the url to scrape. 
+
+    Returns: 
+        allIDs - dictionary that maps (firstname, lastname) to bsb reference id 
+
+    """
+    allIDs = {}
+    batterIDs = {}
+    pitcherIDs = {}
+    urlseen = set()
+    with open("data/stathead_data/stathead_batter_data.csv", 'r') as f: 
+        reader = csv.DictReader(f)
+        for row in reader: 
+            splitFirst = row['Player'].split()
+            firstname = splitFirst[0]
+            if len(splitFirst) == 3:
+                splitLast = splitFirst[2].split("\\")
+                lastname = splitFirst[1] + " " + splitLast[0]
+                id = splitLast[1]
+            elif len(splitFirst) == 4:
+                splitLast = splitFirst[3].split("\\")
+                lastname = splitFirst[1] + " " + splitFirst[2] + " " + splitLast[0]
+                id = splitLast[1]
+            else:
+                splitLast = splitFirst[1].split("\\")
+                lastname = splitLast[0]
+                id = splitLast[1]
+            
+            if id not in urlseen:
+                batterIDs[(firstname, lastname)] = id
+                allIDs[(firstname, lastname)] = id
+                urlseen.add(id)
+            
+    with open("data/stathead_data/stathead_pitcher_data.csv", 'r') as f: 
+        reader = csv.DictReader(f)
         
-        if id not in urlseen:
-            batterIDs[(firstname, lastname)] = id
-            allIDs[(firstname, lastname)] = id
-            urlseen.add(id)
-        
+        for row in reader: 
+            splitFirst = row['Player'].split()
+            firstname = splitFirst[0]
+            if len(splitFirst) == 3:
+                splitLast = splitFirst[2].split("\\")
+                lastname = splitFirst[1] + splitLast[0]
+                id = splitLast[1]
+            elif len(splitFirst) == 4:
+                splitLast = splitFirst[3].split("\\")
+                lastname = splitFirst[1] + splitFirst[2] + splitLast[0]
+                id = splitLast[1]
+            else:
+                splitLast = splitFirst[1].split("\\")
+                lastname = splitLast[0]
+                id = splitLast[1]
 
-with open('/Users/dominicflocco/Desktop/CSC353_finalProject/data/player_info.csv', 'r') as f: 
-    reader = csv.DictReader(f)
-    for row in reader: 
-        firstname = row['first_name']
-        lastname = row['last_name']
-        id = row['bsbref_id']
-        allIDs[(firstname, lastname)] = id
+            if id not in urlseen:
+                pitcherIDs[(firstname, lastname)] = id
+                allIDs[(firstname, lastname)] = id
+                urlseen.add(id)
 
-print(len(allIDs))
+    return allIDs
 
-# with open("/Users/dominicflocco/Desktop/CSC353_finalProject/stathead_data/stathead_pitcher_data.csv", 'r') as f: 
-#     reader = csv.DictReader(f)
-    
-#     for row in reader: 
-#         splitFirst = row['Player'].split()
-#         firstname = splitFirst[0]
-#         if len(splitFirst) == 3:
-#             splitLast = splitFirst[2].split("\\")
-#             lastname = splitFirst[1] + splitLast[0]
-#             id = splitLast[1]
-#         elif len(splitFirst) == 4:
-#             splitLast = splitFirst[3].split("\\")
-#             lastname = splitFirst[1] + splitFirst[2] + splitLast[0]
-#             id = splitLast[1]
-#         else:
-#             splitLast = splitFirst[1].split("\\")
-#             lastname = splitLast[0]
-#             id = splitLast[1]
+allIDs = readIDs()
 
-#         if id not in urlseen:
-#             pitcherIDs[(firstname, lastname)] = id
-#             allIDs[(firstname, lastname)] = id
-#             urlseen.add(id)
+def convertName(firstname, lastname): 
+    """ 
+    Converts and instance of player firstname and lastname to their baseball 
+    reference ID to be used in scraping. If the name is not found in curated list, 
+    the id is created using the general pattern for bsb reference ids. Some players
+    were not in the allIDs dictionary and had unique IDs that did not follow the detected
+    pattern. In this case, their id was hardcoded in. 
 
-def convertAllNames(firstname, lastname): 
-    # if lastname == "Gurriel": 
-    #     return "gourryu01"
-    # if firstname == "Tommy" and lastname == "Pham": 
-    #     return "phamth01"
-    # if firstname == "J.D." and lastname == "Martinez": 
-    #     return "martijd02"
-    # if firstname == "Yolmer" and lastname == "Sanchez":
-    #     return "sanchca01"
-
-    # lastname = lastname.split()[0] 
-    
-    # if len(lastname) >= 5: 
-    #     lastname = lastname[:5].lower()
-    # else: 
-    #     lastname = lastname.lower()
-    # firstname = firstname[:2].lower()
-
-    # if lastname in ["cruz", "black", "braun", "brant", "rojas", "herna", "donal", "garci", "abreu"]:
-    #     return lastname + firstname + "02"
-    # elif lastname in ['harpe']:
-    #     return lastname + firstname + "03"
-    # else:
-    #     return lastname + firstname + "01"
-    # if type == "batter": 
-    #     if (firstname, lastname) in batterIDs:
-    #         id = batterIDs[(firstname, lastname)]
-    #     else: 
-    #         if lastname == "Bradley":
-    #             return "bradlja02"
-    #         if lastname == "Guerrero Jr.":
-    #             return "guerrvl02"
-            
-    #         lastname = lastname.split()[0] 
-            
-    #         if len(lastname) >= 5: 
-    #             lastname = lastname[:5].lower()
-    #         else: 
-    #             lastname = lastname.lower()
-
-    #         firstname = firstname[:2].lower()
-    #         if firstname == "b.":
-    #             firstname = "bj"
-    #         if lastname in ['tatis', 'taylo', "garci"]:
-    #             id = lastname + firstname + "02"
-    #         elif lastname in ['ramir']:
-    #             id = lastname + firstname + "03"
-    #         else:
-                
-    #             id = lastname + firstname + "01"
-    # else: 
-    #     if (firstname, lastname) in pitcherIDs:
-    #         id = pitcherIDs[(firstname, lastname)]
-    #     else: 
-    #         if lastname == "De La Cruz":
-    #             return "delacjo01"
-    #         lastname = lastname.split()[0] 
-            
-    #         if len(lastname) >= 5: 
-    #             lastname = lastname[:5].lower()
-    #         else: 
-    #             lastname = lastname.lower()
-    #         if lastname == "alani":
-    #             return "alanirj01"
-    #         if firstname == "Thomas" and lastname == "hatch":
-    #             return "hatchto01"
-    #         if lastname == "o'fla": 
-    #             return "oflaher01"
-    #         firstname = firstname[:2].lower()
-    #         if firstname == "c.":
-    #             return "riefecj01"
-    #         if lastname in ["reyno", "rober", "brown", "edwar", "russe", "johns"]:
-    #             id = lastname + firstname + "02"
-    #         elif lastname in ["harri", "valde"]:
-    #             id = lastname + firstname + "03"
-    #         elif lastname in ['taylo']:
-    #             id = lastname + firstname + "10"
-    #         else:
-    #             id = lastname + firstname + "01"
+    Parameters:    
+        firstname - player first name 
+        lastname - player last name 
+    Returns: 
+        id - baseball reference id 
+    """
 
     if (firstname, lastname) in allIDs:
         id = allIDs[(firstname, lastname)]
@@ -176,10 +124,21 @@ def convertAllNames(firstname, lastname):
     return id
 
 def scrapePlayerInfo(firstname, lastname):
+    """
+    Uses beautiful soup package to scrape baseball-reference.com for player biological
+    and demographic information. 
 
-    player = convertAllNames(firstname, lastname)
+    Parameters: 
+        firstname - player first name 
+        latname - player last name 
+
+    Returns: 
+        playerData - pandas dataframe with player information 
+    """
+
+    player = convertName(firstname, lastname)
     url = "https://www.baseball-reference.com/players/"+ player[0] +"/" + player + ".shtml"
-    #url = https://www.baseball-reference.com/players/t/troutmi01.html
+   
     reqs = requests.get(url)
     data = BeautifulSoup(reqs.content, features="html.parser")
     player_info = data.find('div', {'id': 'meta'} )
@@ -236,8 +195,16 @@ def scrapePlayerInfo(firstname, lastname):
         
 
 def readHitterNames():
+    """
+    Reads in batter names to be scraped based on season level statistics 
+    downloaded from basebal savant. 
+
+    Returns: 
+        players - dictionary that maps (firstname, lastname) to the set of 
+        seasons that a player plays in
+    """
     hittersSeen = set()
-    files = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/savant_data/hitter_stats_FULL/*")
+    files = glob.glob("data/savant_data/hitter_stats/*")
     
     players = {}
     for file in files: 
@@ -257,8 +224,16 @@ def readHitterNames():
     return players
     
 def readPitcherNames():
+    """
+    Reads in pitcher names to be scraped based on season level statistics 
+    downloaded from basebal savant. 
+
+    Returns: 
+        players - dictionary that maps (firstname, lastname) to the set of 
+        seasons that a player plays in
+    """
     pitchersSeen = set()
-    files = glob.glob("savant_data/pitcher_stats/*")
+    files = glob.glob("data/savant_data/pitcher_stats/*")
     players = {}
     for file in files: 
         with open(file, 'r') as f: 
@@ -280,7 +255,7 @@ def readPitcherNames():
 def main():
     
     batters = readHitterNames()
-    #pitchers = readPitcherNames()
+    pitchers = readPitcherNames()
     
     column_names = ['first_name', 'last_name', 'bsbref_id', "position", "bats", "throws", "height", "weight",
                     "cur_team", "dob",  "debut"]
@@ -294,12 +269,16 @@ def main():
         if len(df)%100==0:
             print(len(df))
  
-    #df.to_csv("batter_info.csv")
-    # for player in pitchers: 
-    #     player_info = scrapePlayerInfo(player[0], player[1])
-    #     df = df.append(player_info, ignore_index=True)
-    #     print(len(df))
-    df.to_csv("player_info_NEW.csv")
+    
+    df = pd.DataFrame(columns=column_names)
+    for player in pitchers: 
+        player_info = scrapePlayerInfo(player[0], player[1])
+        seasons = ','.join(pitchers[player])
+        player_info['seasons'] = seasons
+        df = df.append(player_info, ignore_index=True)
+        if len(df)%100==0:
+            print(len(df))
+    df.to_csv("data/player_info.csv")
 
 if __name__ == "__main__":
     main()

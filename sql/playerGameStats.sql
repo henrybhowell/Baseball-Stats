@@ -1,4 +1,5 @@
 USE Baseball;
+-- Aggregates a batter's game level stats against a given team within a date range
 DROP PROCEDURE IF EXISTS batterGameStats;
 DELIMITER //
 CREATE PROCEDURE batterGameStats(firstname VARCHAR(20), lastname VARCHAR(20), opponent VARCHAR(3), start_date DATE, end_date DATE, home BIT, away BIT)
@@ -32,6 +33,7 @@ END;
 //
 DELIMITER ;
 
+-- Aggregates a pitcher's game level statistics against a given team within a date range
 DROP PROCEDURE IF EXISTS pitcherGameStats;
 DELIMITER //
 CREATE PROCEDURE pitcherGameStats(firstname VARCHAR(20), lastname VARCHAR(20), opponent VARCHAR(3), start_date DATE, end_date DATE, home BIT, away BIT)

@@ -1,5 +1,5 @@
 USE Baseball;
-
+--Get number of days a player has been their current age based on date of birth
 DROP FUNCTION IF EXISTS getAgeDay;
 DELIMITER //
 CREATE FUNCTION getAgeDay(dob DATE) RETURNS INTEGER READS SQL DATA
@@ -12,7 +12,7 @@ END;
 //
 DELIMITER ;
 
-
+--Gets age in years of player based on date of birth
 DROP FUNCTION IF EXISTS getAgeYear;
 DELIMITER //
 CREATE FUNCTION getAgeYear(dob DATE) RETURNS INTEGER READS SQL DATA

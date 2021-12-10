@@ -1,5 +1,5 @@
 USE Baseball;
-
+--Gets a given pitcher's season level stats split into individual years, within a year range
 DROP PROCEDURE IF EXISTS pitcherSeasonStats;
 DELIMITER //
 CREATE PROCEDURE pitcherSeasonStats(start_year VARCHAR(4), end_year VARCHAR(4), firstname VARCHAR(20), lastname VARCHAR(20))
@@ -10,7 +10,7 @@ BEGIN
 END
 //
 DELIMITER ;
-
+--Gets a given batter's season level stats split into individual years, within a year range
 DROP PROCEDURE IF EXISTS batterSeasonStats;
 DELIMITER //
 CREATE PROCEDURE batterSeasonStats(start_year VARCHAR(4), end_year VARCHAR(4), firstname VARCHAR(20), lastname VARCHAR(20))

@@ -1,6 +1,6 @@
 USE Baseball;
 
-
+-- get a given player's bio information
 DROP PROCEDURE IF EXISTS getPlayerInfo;
 DELIMITER //
 CREATE PROCEDURE getPlayerInfo(firstname VARCHAR(20), lastname VARCHAR(20))

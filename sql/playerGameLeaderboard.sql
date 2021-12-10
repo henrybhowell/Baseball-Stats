@@ -1,5 +1,5 @@
 USE Baseball;
-
+-- top 100 homerun hitters between given date range
 DROP PROCEDURE IF EXISTS batterGameLeaderboard;
 DELIMITER //
 CREATE PROCEDURE batterGameLeaderboard(start_date DATE, end_date DATE)
@@ -11,7 +11,7 @@ END
 //
 DELIMITER ;
 
-
+-- top 100 strikeout leaders between given date range
 DROP PROCEDURE IF EXISTS pitcherGameLeaderboard;
 DELIMITER //
 CREATE PROCEDURE pitcherGameLeaderboard(start_date DATE, end_date DATE)

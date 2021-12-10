@@ -1,6 +1,6 @@
 USE Baseball;
 
-
+-- Aggregates season level stats for all pitcher between certain year range, projects top 100 of given stat ordered by stat
 DROP PROCEDURE IF EXISTS PitcherSeasonAggregate;
 DELIMITER //
 CREATE PROCEDURE PitcherSeasonAggregate(start_year VARCHAR(4), finish_year VARCHAR(4), stat VARCHAR(20))
@@ -2602,7 +2602,7 @@ BEGIN
 END
 //
 DELIMITER ;
-
+-- Aggregates season level stats for all batter between certain year range, projects top 100 of given stat ordered by stat
 DROP PROCEDURE IF EXISTS batterSeasonAggregate;
 DELIMITER //
 CREATE PROCEDURE batterSeasonAggregate(start_year VARCHAR(4), end_year VARCHAR(4), stat VARCHAR(20))
