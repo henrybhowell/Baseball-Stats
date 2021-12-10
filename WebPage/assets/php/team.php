@@ -1,3 +1,8 @@
+<!-- PHP Handler Page that returns team level statistics
+for two teams matchups against each other based on a
+date range and home/away information  -->
+
+
 <html>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -42,7 +47,8 @@
   $sdate = $_POST['sDate'];
   $edate = $_POST['eDate'];
 
-  if ($local = 'home'){
+  // Assign local to bit value based on user input
+  if ($local == 'Home'){
     $home = 1;
     $away = 0;
   }
@@ -54,7 +60,7 @@
 
 
 
-
+// Team season data based on dates and opponents
   $test_query = "CALL teamTable('$tname', '$oname', $home, $away, '$sdate', '$edate');";
   $result = mysqli_query($conn, $test_query);
 
@@ -69,7 +75,7 @@
           <th>RF</th>
           <th>RA</th>";
 
-  $tuple_count = 0;
+  // for each row of sql data, add that to a table row
   while ($row = mysqli_fetch_array($result)) {
 
 

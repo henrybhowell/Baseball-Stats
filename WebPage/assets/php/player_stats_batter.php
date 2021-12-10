@@ -1,3 +1,6 @@
+<!-- Gives overall season stats for user-inputted season years
+for a given batter name -->
+
 <html>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -37,6 +40,7 @@
   mysqli_select_db($conn, $dbname) or die("Could not open the '$dbname'");
 
   $pName = $_POST['pName'];
+  // split name into first and last names
   $arr = explode(" ",$pName);
   $firstname = $arr[0];
   $lastname = $arr[1];
@@ -45,6 +49,7 @@
 
 
 
+  // Access sql schema to get column names to populate headers
   $test_query1 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='batterseasonstats';";
   $result1 = mysqli_query($conn, $test_query1);
 
@@ -54,15 +59,17 @@
   echo "<br>";
   echo "<div style='overflow-x:auto'>";
   echo "<table border='1'>";
+  // populate headers
   while ($row = mysqli_fetch_array($result1)) {
         echo "<th>" . $row[0] . "</th>";
       }
 
 
+  // Call Sql Script using inputted variables
   $test_query = "CALL BatterSeasonStats( '$sDate', $eDate, '$firstname', '$lastname');";
   $result = mysqli_query($conn, $test_query);
-  $tuple_count = 0;
 
+  // for each row of sql data, add that to a table row
   while ($row = mysqli_fetch_array($result)) {
           echo "<tr>";
           for ($i=0; $i < 38; $i++) {
