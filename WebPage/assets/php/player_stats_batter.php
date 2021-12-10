@@ -36,54 +36,47 @@
 
   mysqli_select_db($conn, $dbname) or die("Could not open the '$dbname'");
 
-  $tname = $_POST['tName'];
-  $local = $_POST['location'];
-  $oname = $_POST['oName'];
-  $sdate = $_POST['sDate'];
-  $edate = $_POST['eDate'];
-
-  if ($local = 'home'){
-    $home = 1;
-    $away = 0;
-  }
-
-  else {
-    $home = 0;
-    $away = 1;
-  }
+  $pName = $_POST['pName'];
+  $arr = explode(" ",$pName);
+  $firstname = $arr[0];
+  $lastname = $arr[1];
+  $sDate = $_POST['sDate'];
+  $eDate = $_POST['eDate'];
 
 
 
-
-  $test_query = "CALL teamTable('$tname', '$oname', $home, $away, '$sdate', '$edate');";
-  $result = mysqli_query($conn, $test_query);
+  $test_query1 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='batterseasonstats';";
+  $result1 = mysqli_query($conn, $test_query1);
 
   echo "<div class='col align-self-center tables'>";
-  echo "<h1> Aggregate Statistics for " . $tname . " against " . $oname ."</h1>";
+  echo "<h1> Batter Statistics for " . $pName . "</h1>";
 
   echo "<br>";
-  echo "<table border='1'>
-          <tr>
-          <th>Games_Played</th>
-          <th>Win_PCT</th>
-          <th>RF</th>
-          <th>RA</th>";
+  echo "<div style='overflow-x:auto'>";
+  echo "<table border='1'>";
+  while ($row = mysqli_fetch_array($result1)) {
+        echo "<th>" . $row[0] . "</th>";
+      }
 
+
+  $test_query = "CALL BatterSeasonStats( '$sDate', $eDate, '$firstname', '$lastname');";
+  $result = mysqli_query($conn, $test_query);
   $tuple_count = 0;
+
   while ($row = mysqli_fetch_array($result)) {
+          echo "<tr>";
+          for ($i=0; $i < 38; $i++) {
+            echo "<td>" . $row[$i] . "</td>";
+          }
 
+          echo "</tr>";
 
-      echo "<tr>";
-        echo "<td>" . $row[0]. "</td>";
-        echo "<td>" . $row[1]. "</td>";
-        echo "<td>" . $row[2]. "</td>";
-        echo "<td>" . $row[3]. "</td>";
-
-      echo "</tr>";
   }
       echo "</table>";
+      echo "</div>";
     echo "</div>";
   echo "</div>";
+
   ?>
 </body>
 </html>

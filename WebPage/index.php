@@ -59,6 +59,41 @@
 
     <div class="container">
       <div class="row">
+        <form action="assets/php/player.php" method="POST">
+          <div class="d-flex justify-content-center">
+              <label for="plName" class="top"><h2>Player Info</h2>
+                <select name="plName" class="box">
+                  <option value="pName">--Select Player--</option>
+                  <?php
+
+                  $stmt4 = $conn->prepare("SELECT DISTINCT CONCAT(first_name, ' ', last_name) as name FROM Players ORDER BY name ASC;");
+
+                  $stmt4->execute();
+                  $result4 = $stmt4->get_result();
+                  $used = array("");
+
+                      while ($row = mysqli_fetch_array($result4)){
+                        foreach ($row as $value) {
+                          if (!in_array($value, $used)){
+                            echo "<option value='$value'>$value</option>";
+                            $used[] = $value;
+                          }
+                        }
+                      }
+                   ?>
+                </select>
+              </label>
+
+          </div>
+          <div class="d-flex justify-content-center">
+            <input type="submit" class="col-3 top" value="Submit">
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="row">
         <form action="assets/php/team.php" method="POST">
           <div class="d-flex justify-content-center">
               <label for="tName" class="top"><h2> Team</h2>
@@ -107,6 +142,7 @@
                 <span class="align-top"><select name='oName' class="box">
 
                   <option>-- Select Opponent --</option>
+                  <option>ALL</option>
                   <?php
 
                   $stmt4 = $conn->prepare("SELECT DISTINCT away_team FROM Game ORDER BY away_team ASC;");
@@ -148,22 +184,102 @@
 
 
       <div class="d-flex justify-content-center">
-          <label for="pName" class="top"><h2> Players</h2>
+          <label for="pName" class="top"><h2> Pitchers</h2>
           </label>
       </div>
-      <form action="assets/php/player_stats.php" method="POST">
+      <form action="assets/php/player_stats_pitcher.php" method="POST">
         <div class="row">
           <div class="col-3">
-            <h2>Individual Player Stats</h2>
+            <h2>Individual Pitcher Stats</h2>
+          </div>
+
+          <div class="col-4">
+              <label for="pName" class="elem"></label>
+                <span class="align-top"><select name='pName' class="box">
+
+                  <option>-- Select Pitcher --</option>
+                  <?php
+
+                  $stmt4 = $conn->prepare("SELECT DISTINCT CONCAT(first_name, ' ', last_name) as name FROM Players WHERE `position` LIKE 'pitcher' ORDER BY name ASC;");
+
+                  $stmt4->execute();
+                  $result4 = $stmt4->get_result();
+                  $used = array("");
+
+                      while ($row = mysqli_fetch_array($result4)){
+                        foreach ($row as $value) {
+                          if (!in_array($value, $used)){
+                            echo "<option value='$value'>$value</option>";
+                            $used[] = $value;
+                          }
+                        }
+                      }
+                  ?>
+                </select></span>
+            </div>
+
+          <div class="col-2">
+            <label for="sDate" class="elem"></label>
+              <select name='sDate' class="box">
+                <option>-- Start Season --</option>
+                <option>2015</option>
+                <option>2016</option>
+                <option>2017</option>
+                <option>2018</option>
+                <option>2019</option>
+                <option>2020</option>
+                <option>2021</option>
+              </select>
+          </div>
+          <div class="col-2">
+            <label for="eDate" class="elem"></label>
+              <select name='eDate' class="box">
+                <option>-- End Season --</option>
+                <option>2015</option>
+                <option>2016</option>
+                <option>2017</option>
+                <option>2018</option>
+                <option>2019</option>
+                <option>2020</option>
+                <option>2021</option>
+              </select>
+          </div>
+          <div class="col-2">
+
+          </div>
+          <div class="col-3"></div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <input type="submit" class="col-3 top" value="Submit">
+        </div>
+      </form>
+
+
+
+      <form action="assets/php/leaderboard_pitcher.php" method="POST">
+        <div class="row">
+          <div class="col-3">
+            <h2>Pitcher Leaderboard Stats</h2>
           </div>
 
           <div class="col-2">
-            <label for="pName" class="elem"></label>
-              <select name='pName' class="box">
-                <option>-- Select Player --</option>
-                <?php
+            <label for="sDate" class="elem">Start Date</label>
+              <span class="align-top">
+              <input type="date" id="start" name="sDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
+          </div>
 
-                $stmt4 = $conn->prepare("SELECT DISTINCT CONCAT(first_name, ' ', last_name) as name FROM Players ORDER BY name ASC;");
+          <div class="col-2">
+            <label for="eDate" class="elem">End Date</label>
+              <span class="align-top">
+              <input type="date" id="end" name="eDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
+          </div>
+
+          <div class="col-2">
+            <label for="stat" class="elem">Select Stat</label>
+              <select name='stat' class="box">
+                <option>-- Select Stat --</option>
+                <?php
+                $stmt4 = $conn->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='pitcherseasonstats' AND COLUMN_NAME != 'player_id' AND COLUMN_NAME != 'season' ;");
 
                 $stmt4->execute();
                 $result4 = $stmt4->get_result();
@@ -181,6 +297,55 @@
               </select>
           </div>
 
+
+          <div class="col-3">
+            <label for="agg"><h2> Aggregate <input type="checkbox" class="aggregate" name="aggregate" value="Aggregate"></h2></label>
+          </div>
+          <div class="col-3"></div>
+        </div>
+
+
+        <div class="d-flex justify-content-center">
+          <input type="submit" class="col-3 top" value="Submit">
+        </div>
+
+      </form>
+
+      <div class="d-flex justify-content-center">
+          <label for="pName" class="top"><h2> Batter</h2>
+          </label>
+      </div>
+      <form action="assets/php/player_stats_batter.php" method="POST">
+        <div class="row">
+          <div class="col-3">
+            <h2>Individual Batter Stats</h2>
+          </div>
+
+        <div class="col-2">
+            <label for="pName" class="elem"></label>
+              <span class="align-top"><select name='pName' class="box">
+
+                <option>-- Select Batter --</option>
+                <?php
+
+                $stmt4 = $conn->prepare("SELECT DISTINCT CONCAT(first_name, ' ', last_name) as name FROM Players WHERE `position` NOT LIKE 'pitcher' ORDER BY name ASC;");
+
+                $stmt4->execute();
+                $result4 = $stmt4->get_result();
+                $used = array("");
+
+                    while ($row = mysqli_fetch_array($result4)){
+                      foreach ($row as $value) {
+                        if (!in_array($value, $used)){
+                          echo "<option value='$value'>$value</option>";
+                          $used[] = $value;
+                        }
+                      }
+                    }
+                ?>
+              </select></span>
+          </div>
+
           <div class="col-2">
             <label for="sDate" class="elem"></label>
               <select name='sDate' class="box">
@@ -197,7 +362,7 @@
           <div class="col-2">
             <label for="eDate" class="elem"></label>
               <select name='eDate' class="box">
-                <option>-- Start Season --</option>
+                <option>-- End Season --</option>
                 <option>2015</option>
                 <option>2016</option>
                 <option>2017</option>
@@ -208,46 +373,7 @@
               </select>
           </div>
           <div class="col-2">
-            <label for="stat" class="elem"></label>
-              <select name='stat' class="box">
-                <option>-- Select Statistics --</option>
-                <option>G</option>
-                <option>AB</option>
-                <option>PA</option>
-                <option>H</option>
-                <option>1B</option>
-                <option>2B</option>
-                <option>3B</option>
-                <option>HR</option>
-                <option>K</option>
-                <option>BB</option>
-                <option>K_percent</option>
-                <option>BB_percent</option>
-                <option>Average</option>
-                <option>SLG</option>
-                <option>OBP</option>
-                <option>OPS</option>
-                <option>RBI</option>
-                <option>SB</option>
-                <option>HBP</option>
-                <option>R</option>
-                <option>SB_percent</option>
-                <option>xBA</option>
-                <option>xSLG</option>
-                <option>wOBA</option>
-                <option>xwOBA</option>
-                <option>xOBP</option>
-                <option>xISO</option>
-                <option>exit_velocity_avg</option>
-                <option>launch_angle_avg</option>
-                <option>sweet_spot_percent</option>
-                <option>barrel_rate</option>
-                <option>groundballs_percent</option>
-                <option>flyballs_percent</option>
-                <option>linedrives_percent</option>
-                <option>popups_percent</option>
-                <option>sprint_speed</option>
-              </select>
+
           </div>
           <div class="col-3"></div>
         </div>
@@ -256,27 +382,48 @@
         </div>
       </form>
 
-
-
-      <form action="assets/php/leaderboard.php" method="POST">
+      <form action="assets/php/leaderboard_batter.php" method="POST">
         <div class="row">
           <div class="col-3">
-            <h2>Player Leaderboard Stats</h2>
+            <h2>Batter Leaderboard Stats</h2>
           </div>
 
-          <div class="col-3">
-            <label for="sYear" class="elem"></label>
-              <select name='sYear' class="box">
-                <option>--  Season Start Year --</option>
+          <div class="col-2">
+            <label for="sDate" class="elem">Start Date</label>
+              <span class="align-top">
+              <input type="date" id="start" name="sDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
+          </div>
+
+          <div class="col-2">
+            <label for="eDate" class="elem">End Date</label>
+              <span class="align-top">
+              <input type="date" id="end" name="eDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
+          </div>
+
+          <div class="col-2">
+            <label for="stat" class="elem">Select Stat</label>
+              <select name='stat' class="box">
+                <option>-- Select Stat --</option>
+                <?php
+                $stmt4 = $conn->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='batterseasonstats' AND COLUMN_NAME != 'player_id' AND COLUMN_NAME != 'season' ;");
+
+                $stmt4->execute();
+                $result4 = $stmt4->get_result();
+                $used = array("");
+
+                    while ($row = mysqli_fetch_array($result4)){
+                      foreach ($row as $value) {
+                        if (!in_array($value, $used)){
+                          echo "<option value='$value'>$value</option>";
+                          $used[] = $value;
+                        }
+                      }
+                    }
+                 ?>
               </select>
           </div>
 
-          <div class="col-3">
-            <label for="eYear" class="elem"></label>
-              <select name='eYear' class="box">
-                <option>-- Season End Year --</option>
-              </select>
-          </div>
+
           <div class="col-3">
             <label for="agg"><h2> Aggregate <input type="checkbox" class="aggregate" name="aggregate" value="Aggregate"></h2></label>
           </div>
@@ -294,7 +441,6 @@
           <label for="stats" class="top"><h2> Game Level Statistics</h2>
           </label>
       </div>
-
       <form action="assets/php/batters.php" method="POST">
 
         <div class="row">
@@ -302,20 +448,85 @@
             <h2>Batters</h2>
           </div>
 
+          <div class="col-2">
+        <label for="pName" class="elem"></label>
+          <span class="align-top"><select name='pName' class="box">
+
+            <option>-- Select Batter --</option>
+            <?php
+
+            $stmt4 = $conn->prepare("SELECT DISTINCT CONCAT(first_name, ' ', last_name) as name FROM Players WHERE `position` NOT LIKE 'pitcher' ORDER BY name ASC;");
+
+            $stmt4->execute();
+            $result4 = $stmt4->get_result();
+            $used = array("");
+
+                while ($row = mysqli_fetch_array($result4)){
+                  foreach ($row as $value) {
+                    if (!in_array($value, $used)){
+                      echo "<option value='$value'>$value</option>";
+                      $used[] = $value;
+                    }
+                  }
+                }
+            ?>
+          </select></span>
+      </div>
+
+      <div class="col-2">
+              <label for="oName" class="elem"></label>
+                <span class="align-top"><select name='oName' class="box">
+
+                  <option>-- Select Opponent --</option>
+                  <option>ALL</option>
+                  <?php
+
+                  $stmt4 = $conn->prepare("SELECT DISTINCT away_team FROM Game ORDER BY away_team ASC;");
+
+                  $stmt4->execute();
+                  $result4 = $stmt4->get_result();
+                  $used = array("");
+
+                      while ($row = mysqli_fetch_array($result4)){
+                        foreach ($row as $value) {
+                          if (!in_array($value, $used)){
+                            echo "<option value='$value'>$value</option>";
+                            $used[] = $value;
+                          }
+                        }
+                      }
+                   ?>
+                </select></span>
+            </div>
+
+            <div class="row">
+            <div class="col-2"></div>
+
+            <div class="col-2">
+              <label for="location" class="elem">
+                <span class="align-top"><select name='location' class="box">
+                  <option>-- Home/Away --</option>
+                  <option> Home </option>
+                  <option> Away</option>
+
+                </select>
+                </span>
+                  </label>
+            </div>
+
           <div class="col-3">
-            <label for="sDate" class="elem"></label>
-              <select name='sDate' class="box">
-                <option>--  Season Start Date --</option>
-              </select>
+            <label for="sDate" class="elem">Start Date</label>
+              <span class="align-top">
+              <input type="date" id="start" name="sDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
           </div>
 
           <div class="col-3">
-            <label for="eDate" class="elem"></label>
-              <select name='eDate' class="box">
-                <option>-- Season End Date --</option>
-              </select>
+            <label for="eDate" class="elem">End Date</label>
+              <span class="align-top">
+              <input type="date" id="end" name="eDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
           </div>
-        </div>
+
+
 
         <div class="d-flex justify-content-center">
           <input type="submit" class="col-3 top" value="Submit">
@@ -325,74 +536,231 @@
 
 
 
-      <form action="assets/php/ptichers.php" method="POST">
+      <form action="assets/php/pitchers.php" method="POST">
         <div class="row">
           <div class="col-3">
             <h2>Pitchers</h2>
           </div>
 
-          <div class="col-3">
-            <label for="sDate" class="elem"></label>
-              <select name='sDate' class="box">
-                <option>--  Season Start Date --</option>
-              </select>
+          <div class="col-4">
+              <label for="pName" class="elem"></label>
+                <span class="align-top"><select name='pName' class="box">
+
+                  <option>-- Select Pitcher --</option>
+                  <?php
+
+                  $stmt4 = $conn->prepare("SELECT DISTINCT CONCAT(first_name, ' ', last_name) as name FROM Players WHERE `position` LIKE 'pitcher' ORDER BY name ASC;");
+
+                  $stmt4->execute();
+                  $result4 = $stmt4->get_result();
+                  $used = array("");
+
+                      while ($row = mysqli_fetch_array($result4)){
+                        foreach ($row as $value) {
+                          if (!in_array($value, $used)){
+                            echo "<option value='$value'>$value</option>";
+                            $used[] = $value;
+                          }
+                        }
+                      }
+                  ?>
+                </select></span>
+            </div>
+
+            <div class="col">
+              <label for="oName" class="elem"></label>
+                <span class="align-top"><select name='oName' class="box">
+
+                  <option>-- Select Opponent --</option>
+                  <option>ALL</option>
+                  <?php
+
+                  $stmt4 = $conn->prepare("SELECT DISTINCT away_team FROM Game ORDER BY away_team ASC;");
+
+                  $stmt4->execute();
+                  $result4 = $stmt4->get_result();
+                  $used = array("");
+
+                      while ($row = mysqli_fetch_array($result4)){
+                        foreach ($row as $value) {
+                          if (!in_array($value, $used)){
+                            echo "<option value='$value'>$value</option>";
+                            $used[] = $value;
+                          }
+                        }
+                      }
+                   ?>
+                </select></span>
+            </div>
+
+            <div class="row">
+            <div class="col-2"></div>
+
+            <div class="col-2">
+              <label for="location" class="elem">
+                <span class="align-top"><select name='location' class="box">
+                  <option>-- Home/Away --</option>
+                  <option> Home </option>
+                  <option> Away</option>
+
+                </select>
+                </span>
+                  </label>
+            </div>
+
+          <div class="col-4">
+            <label for="sDate" class="elem">Start Date</label>
+              <span class="align-top">
+              <input type="date" id="start" name="sDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
           </div>
 
-          <div class="col-3">
-            <label for="eDate" class="elem"></label>
-              <select name='eDate' class="box">
-                <option>-- Season End Date --</option>
-              </select>
+          <div class="col-4">
+            <label for="eDate" class="elem">End Date</label>
+              <span class="align-top">
+              <input type="date" id="end" name="eDate" value = "2015-04-05" min="2015-04-05" max="2021-10-03"></span>
           </div>
-        </div>
 
-        <div class="d-flex justify-content-center">
+          <div class="d-flex justify-content-center">
           <input type="submit" class="col-3 top" value="Submit">
         </div>
-      </form>
 
-      <form action="assets/php/match_ups.php" method="POST">
-        <div class="row">
-          <div class="col-3">
-            <h2>Match Ups</h2>
-          </div>
 
-          <div class="col-2">
-            <label for="pName" class="elem"></label>
-              <select name='pName' class="box">
-                <option>-- Select Player --</option>
-              </select>
-
-          </div>
-
-          <div class="col-2">
-            <label for="oName" class="elem"></label>
-              <span class="align-top"><select name='oName' class="box">
-                <option>-- Select Opponent --</option>
-              </select></span>
-          </div>
-
-          <div class="col-2">
-            <label for="sDate" class="elem"></label>
-              <select name='sDate' class="box">
-                <option>--  Select Start Date --</option>
-              </select>
-          </div>
-
-          <div class="col-2">
-            <label for="eDate" class="elem"></label>
-              <select name='eDate' class="box">
-                <option>-- Select End Date --</option>
-              </select>
-          </div>
-        </div>
-
-        <div class="d-flex justify-content-center">
-          <input type="submit" class="col-3 top" value="Submit">
-        </div>
-      </form>
 
       <div class="footer">
+        <table>
+    <tr>
+      <th>Statistic</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>G</td>
+      <td>Game</td>
+    </tr>
+    <tr>
+      <td>IP</td>
+      <td>Innings Pitched</td>
+    </tr>
+    <tr>
+        <td>PA</td>
+        <td>Plate Appearance</td>
+    </tr>
+    <tr>
+        <td>AB</td>
+        <td>At Bat</td>
+    </tr>
+    <tr>
+        <td>H</td>
+        <td>Hit</td>
+    </tr>
+    <tr>
+        <td>1B</td>
+        <td>Single</td>
+    </tr>
+    <tr>
+        <td>2B</td>
+        <td>Double</td>
+    </tr>
+    <tr>
+        <td>3B</td>
+        <td>Triple</td>
+    </tr>
+    <tr>
+        <td>HR</td>
+        <td>Home run</td>
+    </tr>
+    <tr>
+        <td>K</td>
+        <td>Strike out</td>
+    </tr>
+    <tr>
+        <td>BB</td>
+        <td>Base on balls</td>
+    </tr>
+    <tr>
+        <td>K_percent</td>
+        <td>Strike out percent</td>
+    </tr>
+    <tr>
+        <td>BB_percent</td>
+        <td>Strike out percent</td>
+    </tr>
+    <tr>
+        <td>BAA</td>
+        <td>Batting average against</td>
+    </tr>
+    <tr>
+        <td>SLG</td>
+        <td>Slugging average</td>
+    </tr>
+    <tr>
+        <td>OBP</td>
+        <td>On base percentage</td>
+    </tr>
+    <tr>
+        <td>OPS</td>
+        <td>On base plus slugging</td>
+    </tr>
+    <tr>
+        <td>ER</td>
+        <td>Earned runs</td>
+    </tr>
+    <tr>
+        <td>R</td>
+        <td>Runs</td>
+    </tr>
+    <tr>
+        <td>SV</td>
+        <td>Saves</td>
+    </tr>
+    <tr>
+        <td>BS</td>
+        <td>Blown Saves</td>
+    </tr>
+    <tr>
+        <td>W</td>
+        <td>Wins</td>
+    </tr>
+    <tr>
+        <td>L</td>
+        <td>Losses</td>
+    </tr>
+    <tr>
+        <td>ERA</td>
+        <td>Earned run average</td>
+    </tr>
+    <tr>
+        <td>xBA</td>
+        <td>Expected batting average</td>
+    </tr>
+    <tr>
+        <td>xSLG</td>
+        <td>Expected slugging percentage</td>
+    </tr>
+    <tr>
+        <td>wOBA</td>
+        <td>Waited on base average</td>
+    </tr>
+    <tr>
+        <td>xwOBA</td>
+        <td>Expected waited on base average</td>
+    </tr>
+    <tr>
+        <td>xOBP</td>
+        <td>Expected on base percentage</td>
+    </tr>
+    <tr>
+        <td>xISO</td>
+        <td>Expected isolated power</td>
+    </tr>
+    <tr>
+        <td>RBI</td>
+        <td>Runs batted in</td>
+    </tr>
+    <tr>
+        <td>HBP</td>
+        <td>Hit by Pitch</td>
+    </tr>
+  </table>
 
       </div>
 

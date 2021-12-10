@@ -36,50 +36,40 @@
 
   mysqli_select_db($conn, $dbname) or die("Could not open the '$dbname'");
 
-  $tname = $_POST['tName'];
-  $local = $_POST['location'];
-  $oname = $_POST['oName'];
-  $sdate = $_POST['sDate'];
-  $edate = $_POST['eDate'];
+  $pName = $_POST['plName'];
+  $arr = explode(" ",$pName);
+  $firstname = $arr[0];
+  $lastname = $arr[1];
 
-  if ($local = 'home'){
-    $home = 1;
-    $away = 0;
-  }
 
-  else {
-    $home = 0;
-    $away = 1;
-  }
+  $test_query1 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='Players';";
+  $result1 = mysqli_query($conn, $test_query1);
 
 
 
 
-  $test_query = "CALL teamTable('$tname', '$oname', $home, $away, '$sdate', '$edate');";
-  $result = mysqli_query($conn, $test_query);
 
   echo "<div class='col align-self-center tables'>";
-  echo "<h1> Aggregate Statistics for " . $tname . " against " . $oname ."</h1>";
+  echo "<h1> PLayer Information for " . $firstname . " " . $lastname ."</h1>";
 
   echo "<br>";
-  echo "<table border='1'>
-          <tr>
-          <th>Games_Played</th>
-          <th>Win_PCT</th>
-          <th>RF</th>
-          <th>RA</th>";
+  echo "<div style='overflow-x:auto'>";
+  echo "<table border='1'>";
+  while ($row = mysqli_fetch_array($result1)) {
+        echo "<th>" . $row[0] . "</th>";
+      }
 
-  $tuple_count = 0;
+
+  $test_query = "CALL getPlayerInfo('$firstname', '$lastname');";
+  $result = mysqli_query($conn, $test_query);
   while ($row = mysqli_fetch_array($result)) {
+          echo "<tr>";
+          for ($i=0; $i < 10; $i++) {
+            echo "<td>" . $row[$i] . "</td>";
+          }
 
+          echo "</tr>";
 
-      echo "<tr>";
-        echo "<td>" . $row[0]. "</td>";
-        echo "<td>" . $row[1]. "</td>";
-        echo "<td>" . $row[2]. "</td>";
-        echo "<td>" . $row[3]. "</td>";
-
-      echo "</tr>";
   }
       echo "</table>";
     echo "</div>";
