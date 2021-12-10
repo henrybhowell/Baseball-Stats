@@ -1,3 +1,6 @@
+<!-- PHP handler page that calls the aggregate stats sql script
+  for pitchers based on user input -->
+
 <html>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -39,19 +42,8 @@
   $sDate = $_POST['sDate'];
   $eDate = $_POST['eDate'];
   $stat = $_POST['stat'];
-  // $aggregate = $_POST['aggregate'];
-  //
-  // if ($aggregate = 'aggregate'){
-  //   $aggregate = 1;
-  // }
 
-  $test_query1 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='BatterPlaysIn'";
-  $result1 = mysqli_query($conn, $test_query1);
-  $test_query3 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='Game'";
-  $result3 = mysqli_query($conn, $test_query3);
-  $test_query2 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='Players'";
-  $result2 = mysqli_query($conn, $test_query2);
-
+    // Creating title and table headers
     echo "<div class='col align-self-center tables'>";
     echo "<h1> Aggregate statistics for pitchers by " . $stat ."</h1>";
 
@@ -115,9 +107,12 @@
     echo "<th>knuckle_ball_avg_speed</th>";
     echo "<th>knuckle_ball_avg_spin</th>";
 
+
+    // Call Sql Script using inputted variables
     $test_query = "CALL PitcherSeasonAggregate('$sDate', '$eDate', '$stat');";
     $result = mysqli_query($conn, $test_query);
 
+    // for each row of sql data, add that to a table row
     while ($row = mysqli_fetch_array($result)) {
             echo "<tr>";
             for ($i=0; $i < 57; $i++) {

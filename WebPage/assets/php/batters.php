@@ -1,3 +1,7 @@
+<!-- PHP handler page that gives takes in user input in order to either
+aggregate batter game level statistics or give game level batter statistics for a
+given player -->
+
 <html>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +21,10 @@
     }
     $dbname = "Baseball";
     mysqli_select_db($conn, $dbname) or die("Could not open the '$dbname'");
+
+
     $pName = $_POST['pName'];
+    // break name up to first and last
     $arr = explode(" ",$pName);
     $firstname = $arr[0];
     $lastname = $arr[1];
@@ -27,9 +34,9 @@
     $local = $_POST['location'];
     $agg = $_POST['agg'];
     $stat = $_POST['stat'];
-    // $aggregate = $_POST['aggregate'];
 
-    if ($local = 'home'){
+    // assign local to bit value based on input
+    if ($local == 'Home'){
         $home = 1;
         $away = 0;
     }
@@ -40,6 +47,7 @@
 
 
 
+    // Checks if user wants aggregated data, which calls a different sql script
     if ($agg == 'Yes'){
       echo "<div class='col align-self-center tables'>";
       echo "<h1> Aggregate Batter Stastics at the Game Level</h1>";
@@ -78,10 +86,11 @@
       echo  "<th>cwpa_bat</th>";
       echo  "<th>re24_bat</th>";
 
-
+      // Call Sql Script using inputted variables
         $test_query = "CALL batterGameAggregate('$sDate', '$eDate', '$stat');";
         $result = mysqli_query($conn, $test_query);
-        $tuple_count = 0;
+
+        // for each row of sql data, add that to a table row
         while ($row = mysqli_fetch_array($result)) {
                 echo "<tr>";
                 for ($i=0; $i < 31; $i++) {
@@ -95,6 +104,8 @@
         echo "</div>";
       }
 
+
+      // if not aggregate, run game stats for given player
     else{
 
       echo "<div class='col align-self-center tables'>";

@@ -1,3 +1,6 @@
+<!-- PHP Handler page that takes in a player name and returns
+a table of their player information -->
+
 <html>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -41,7 +44,7 @@
   $firstname = $arr[0];
   $lastname = $arr[1];
 
-
+  // get schema information to add headers from column titles
   $test_query1 = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='Players';";
   $result1 = mysqli_query($conn, $test_query1);
 
@@ -64,6 +67,7 @@
 
   $test_query = "CALL getPlayerInfo('$firstname', '$lastname');";
   $result = mysqli_query($conn, $test_query);
+  // for each row of sql data, add that to a table row
   while ($row = mysqli_fetch_array($result)) {
           echo "<tr>";
           for ($i=0; $i < 12; $i++) {

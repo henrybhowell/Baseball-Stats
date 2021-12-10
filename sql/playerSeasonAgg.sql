@@ -2602,7 +2602,9 @@ BEGIN
 END
 //
 DELIMITER ;
--- Aggregates season level stats for all batter between certain year range, projects top 100 of given stat ordered by stat
+
+
+-- Aggregates season level stats for all batters between certain year range, projects top 100 of given stat ordered by stat
 DROP PROCEDURE IF EXISTS batterSeasonAggregate;
 DELIMITER //
 CREATE PROCEDURE batterSeasonAggregate(start_year VARCHAR(4), end_year VARCHAR(4), stat VARCHAR(20))

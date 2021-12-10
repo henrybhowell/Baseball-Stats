@@ -1,4 +1,5 @@
-<!doctype html>
+<!-- PHP page that calls php handler pages using forms to accumulate baseball data -->
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -59,10 +60,13 @@
 
     <div class="container">
       <div class="row">
+        <!-- Player Info Table -->
         <form action="assets/php/player.php" method="POST">
           <div class="d-flex justify-content-center">
               <label for="plName" class="top"><h2>Player Info</h2>
                 <select name="plName" class="box">
+
+                  <!-- Dropdown that calls the SQL in order to get all player names (as Full Name) -->
                   <option value="pName">--Select Player--</option>
                   <?php
 
@@ -98,6 +102,7 @@
           <div class="d-flex justify-content-center">
               <label for="tName" class="top"><h2> Team</h2>
                 <select name="tName" class="box">
+                  <!-- Dropdown that calls the SQL in order to get all team names in alpabetical order -->
                   <option>-- Select Team --</option>
                   <?php
 
@@ -123,6 +128,7 @@
           <div class="row">
             <div class="col-2"></div>
 
+            <!-- Selector for Home or Away -->
             <div class="col-2">
               <label for="location" class="elem">
                 <span class="align-top"><select name='location' class="box">
@@ -141,6 +147,7 @@
               <label for="oName" class="elem"></label>
                 <span class="align-top"><select name='oName' class="box">
 
+                  <!-- Dropdown that calls the SQL in order to get all team names for opponent -->
                   <option>-- Select Opponent --</option>
                   <option>ALL</option>
                   <?php
@@ -163,6 +170,7 @@
                 </select></span>
             </div>
 
+            <!-- Calendar feature to select dates -->
             <div class="col-2">
               <label for="sDate" class="elem">Start Date</label>
                 <span class="align-top">
@@ -197,6 +205,7 @@
               <label for="pName" class="elem"></label>
                 <span class="align-top"><select name='pName' class="box">
 
+                  <!-- Dropdown that calls the SQL in order to get all player names (as Full Name) -->
                   <option>-- Select Pitcher --</option>
                   <?php
 
@@ -218,6 +227,7 @@
                 </select></span>
             </div>
 
+            <!-- All the years looked at in the CSV's  -->
           <div class="col-2">
             <label for="sDate" class="elem"></label>
               <select name='sDate' class="box">
@@ -289,6 +299,7 @@
 
           <div class="col-2">
             <label for="stat" class="elem">Select Stat</label>
+            <!-- Dropdown that calls the SQL in order to get all column names for pitcher stats -->
               <select name='stat' class="box">
                 <option>-- Select Stat --</option>
                 <?php
@@ -335,6 +346,7 @@
             <label for="pName" class="elem"></label>
               <span class="align-top"><select name='pName' class="box">
 
+                <!-- Dropdown that calls the SQL in order to get all player names (as Full Name) -->
                 <option>-- Select Batter --</option>
                 <?php
 
@@ -425,6 +437,7 @@
               </select>
           </div>
 
+          <!-- Selected aggregate stats for batter data  -->
           <div class="col-2">
             <label for="stat" class="elem">Select Stat</label>
               <select name='stat' class="box">
@@ -489,6 +502,7 @@
             <label for="pName" class="elem"></label>
             <span class="align-top"><select name='pName' class="box">
 
+              <!-- Dropdown that calls the SQL in order to get all player names (as Full Name) -->
               <option>-- Select Batter --</option>
               <?php
 
@@ -514,6 +528,7 @@
               <label for="oName" class="elem"></label>
                 <span class="align-top"><select name='oName' class="box">
 
+                  <!-- Dropdown that calls the SQL in order to get team names as opponents -->
                   <option>-- Select Opponent --</option>
                   <option>ALL</option>
                   <?php
@@ -564,6 +579,8 @@
           <div class="col-2">
             <label for="stat" class="elem">Select Stat</label>
               <select name='stat' class="box">
+
+                <!-- Dropdown that calls the SQL in order to get all column names for batter stats -->
                 <option>-- Select Stat --</option>
                 <?php
                 $stmt4 = $conn->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='batterseasonstats' AND COLUMN_NAME != 'player_id' AND COLUMN_NAME != 'season' ;");
@@ -623,6 +640,7 @@
           <div class="col-2">
             <label for="stat" class="elem">Select Stat</label>
               <select name='stat' class="box">
+                <!-- Dropdown that calls the SQL in order to get all column names for pitcher season stats -->
                 <option>-- Select Stat --</option>
                 <?php
                 $stmt4 = $conn->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='batterseasonstats' AND COLUMN_NAME != 'player_id' AND COLUMN_NAME != 'season' ;");
@@ -667,6 +685,7 @@
               <label for="pName" class="elem"></label>
                 <span class="align-top"><select name='pName' class="box">
 
+                  <!-- Dropdown that calls the SQL in order to get all player names (as Full Name) -->
                   <option>-- Select Pitcher --</option>
                   <?php
 
@@ -692,6 +711,7 @@
               <label for="oName" class="elem"></label>
                 <span class="align-top"><select name='oName' class="box">
 
+                  <!-- Dropdown that calls the SQL in order to get all team names as opponent -->
                   <option>-- Select Opponent --</option>
                   <option>ALL</option>
                   <?php
@@ -742,6 +762,7 @@
           <div class="col-2">
             <label for="stat" class="elem">Select Stat</label>
               <select name='stat' class="box">
+                <!-- Dropdown that calls the SQL in order to get all column names for pitcher season stats -->
                 <option>-- Select Stat --</option>
                 <?php
                 $stmt4 = $conn->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='pitcherseasonstats' AND COLUMN_NAME != 'player_id' AND COLUMN_NAME != 'season' ;");
@@ -798,6 +819,7 @@
           <div class="col-2">
             <label for="stat" class="elem">Select Stat</label>
               <select name='stat' class="box">
+                <!-- Dropdown that calls the SQL in order to get all column names for pitcher seaosn stats -->
                 <option>-- Select Stat --</option>
                 <?php
                 $stmt4 = $conn->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Baseball' AND TABLE_NAME='pitcherseasonstats' AND COLUMN_NAME != 'player_id' AND COLUMN_NAME != 'season' ;");
@@ -828,8 +850,7 @@
 
       </form>
 
-
-
+      <!-- Table used as a key for abbreviated statistics throughout page -->
       <div class="footer">
         <table>
     <tr>

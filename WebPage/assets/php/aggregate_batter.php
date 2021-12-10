@@ -1,3 +1,6 @@
+<!-- PHP handler page that calls the aggregate stats sql script
+  for batters based on user input -->
+
 <html>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -40,6 +43,8 @@
   $eDate = $_POST['eDate'];
   $stat = $_POST['stat'];
 
+
+    // Creating title and table headers
     echo "<div class='col align-self-center tables'>";
     echo "<h1> Leaderboard for top 100 batters ordered by " . $stat ."</h1>";
 
@@ -77,9 +82,12 @@
     echo "<th>xISO</th>";
     echo "<th>sprint_speed</th>";
 
+    // Call Sql Script using inputted variables
+
     $test_query = "CALL BatterSeasonAggregate('$sDate', '$eDate', '$stat');";
     $result = mysqli_query($conn, $test_query);
 
+    // for each row of sql data, add that to a table row
     while ($row = mysqli_fetch_array($result)) {
             echo "<tr>";
             for ($i=0; $i < 30; $i++) {
