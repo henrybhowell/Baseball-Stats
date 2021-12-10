@@ -268,7 +268,7 @@ def readHitterNamesUpdate():
             if player_id not in hittersSeen: 
                 players[(first_name, last_name, player_id)] = seasons.split(',')
                 hittersSeen.add(player_id)
-    
+    players[('Michael', 'Brantley', 'brantmi02')] = '2015,2016,2017,2018,2019,2020,2021'
     return players
     
     
@@ -293,10 +293,11 @@ def readPitcherNames():
     return players
 
 def resumeCheckpoint(players):
-    files = glob.glob("bsb_reference_data/batter_gamelogs_NEW/*") 
+    files = glob.glob("/Users/dominicflocco/Desktop/CSC353_finalProject/data/bsb_reference_data/*.csv") 
     print(len(files))
     for file in files: 
-        fileList = file.split("/")
+        split = file.split('NEW')
+        fileList = split[1].split("/")
         fileList = fileList[-1].split("_")
         firstname = fileList[0]
         lastname = fileList[1]
@@ -323,7 +324,7 @@ def main():
             dfs.append(scrapeHitterUpdate(id, year))
         batter_df = pd.concat(dfs)
         filename = firstname + "_" + lastname + "_gamelogs.csv"
-        batter_df.to_csv("/Users/dominicflocco/Desktop/CSC353_finalProject/data/bsb_reference_data/batter_gamelogs_NEW" + filename, index=False)
+        batter_df.to_csv("/Users/dominicflocco/Desktop/CSC353_finalProject/data/bsb_reference_data/batter_gamelogs_NEW/" + filename, index=False)
 
     # for pitcher in pitchers: 
     #     dfs = []
