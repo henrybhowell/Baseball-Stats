@@ -34,3 +34,5 @@ Steps for compiling stack:
 	3) a localhost via PHP within the WebPage directory through the command "php -S localhost:3333"
 		+ then navigate to the index.php file on the localhost
 		+ assets/php -> contains each PHP handler page that runs each procedure from procedures.sql
+
+<video> /Users/henryhowell2/Desktop/My Movie 1.mp4 </video>
