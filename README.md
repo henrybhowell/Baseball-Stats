@@ -35,4 +35,5 @@ Steps for compiling stack:
 		+ then navigate to the index.php file on the localhost
 		+ assets/php -> contains each PHP handler page that runs each procedure from procedures.sql
 
-<video> /Users/henryhowell2/Desktop/My Movie 1.mp4 </video>
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3MTK3UEZO9M/0.jpg)](https://www.youtube.com/watch?v=3MTK3UEZO9M)
